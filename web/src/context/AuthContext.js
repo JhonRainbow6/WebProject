@@ -4,7 +4,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(false); // Cambiado a false inicialmente
+    const [loading, setLoading] = useState(false); 
     const [error, setError] = useState(null);
 
     return (
