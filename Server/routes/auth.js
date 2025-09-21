@@ -16,6 +16,27 @@ const loginSchema = Joi.object({
     password: Joi.string().min(6).required()
 });
 
+// Middleware para verificar el token
+const verifyToken = (req, res, next) => {
+    try {
+        const token = req.header('auth-token');
+        console.log('Token recibido:', token); // Log para depuración
+
+        if (!token) {
+            console.log('No se proporcionó token');
+            return res.status(401).json({ error: 'Acceso denegado - Token no proporcionado' });
+        }
+
+        const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+        console.log('Token verificado:', verified); // Log para depuración
+        req.user = verified;
+        next();
+    } catch (error) {
+        console.error('Error al verificar token:', error.message);
+        res.status(400).json({ error: 'Token no válido - ' + error.message });
+    }
+}
+
 // Registrar un nuevo usuario
 router.post('/register', async (req, res) => {
     // Validacion de los datos antes de crear el usuario
@@ -49,8 +70,10 @@ router.post('/register', async (req, res) => {
         });
 
         const savedUser = await user.save();
-        res.status(201).json({ userId: savedUser._id });
-
+        res.json({
+            error: null,
+            data: { userId: savedUser._id }
+        });
     } catch (error) {
         res.status(500).json({ error: 'Error interno del servidor. Intenta más tarde.' });
     }
@@ -58,7 +81,7 @@ router.post('/register', async (req, res) => {
 
 // Inicio de sesión
 router.post('/login', async (req, res) => {
-    // Validar los datos
+    // Validación de los datos
     const { error } = loginSchema.validate(req.body);
     if (error) {
         let message = error.details[0].message;
@@ -71,27 +94,63 @@ router.post('/login', async (req, res) => {
     }
 
     try {
-        // Verificar si el usuario existe
+        // Verificar si el email existe
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
-            return res.status(404).json({ error: 'El usuario no existe. Verifica el correo electrónico.' });
+            return res.status(400).json({ error: 'Email no encontrado.' });
         }
 
-        // 3. Verificar la contraseña
+        // Verificar la contraseña
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) {
-            return res.status(401).json({ error: 'La contraseña es incorrecta.' });
+            return res.status(400).json({ error: 'Contraseña incorrecta.' });
         }
 
-        // Crear y firmar el token
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-            expiresIn: '1h'
+        // Crear y asignar un token
+        const token = jwt.sign(
+            { _id: user._id, email: user.email },
+            process.env.TOKEN_SECRET,
+            { expiresIn: '24h' } // Token válido por 24 horas
+        );
+
+        console.log('Token generado:', token); // Log para depuración
+
+        res.json({
+            error: null,
+            data: {
+                token,
+                user: {
+                    email: user.email,
+                    id: user._id
+                }
+            }
         });
 
-        res.header('auth-token', token).json({ token });
-
     } catch (error) {
-        res.status(500).json({ error: 'Error interno del servidor. Intenta más tarde.' });
+        console.error('Error en login:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+});
+
+// Obtener información del usuario
+router.get('/user', verifyToken, async (req, res) => {
+    try {
+        console.log('ID de usuario en la petición:', req.user._id); // Log para depuración
+        const user = await User.findById(req.user._id).select('-password');
+
+        if (!user) {
+            console.log('Usuario no encontrado en la base de datos');
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        console.log('Usuario encontrado:', user); // Log para depuración
+        res.json({
+            error: null,
+            data: { user }
+        });
+    } catch (error) {
+        console.error('Error al obtener usuario:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 

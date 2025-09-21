@@ -1,26 +1,27 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv'); // Importar dotenv
 const cors = require('cors');
-require('dotenv').config(); // Carga las variables de entorno en .env
+
+// Configurar dotenv ANTES de usar cualquier variable de entorno
+dotenv.config();
 
 const app = express();
 
-// Middlewares
-app.use(cors());
-app.use(express.json()); // parsear JSON
-
-// Obtencion de credenciales desde .env
-const miPassword = process.env.DB_PASSWORD;
-const cadenaConexion = process.env.DB_CONNECTION_STRING;
-
-// Conexión a MongoDB
-mongoose.connect(cadenaConexion.replace('<db_password>', miPassword), {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => console.log('Conectado a MongoDB'))
-    .catch(err => console.error('No se pudo conectar a MongoDB', err));
-
+// Importar Rutas
 const authRoutes = require('./routes/auth');
+
+// Conectar a la DB
+const dbConnectionString = process.env.DB_CONNECTION_STRING.replace('<db_password>', process.env.DB_PASSWORD);
+mongoose.connect(dbConnectionString)
+    .then(() => console.log('Conectado a MongoDB...'))
+    .catch(error => console.error('Error de conexión a la base de datos:', error));
+
+// Middlewares
+app.use(cors()); // Habilitar CORS para todas las rutas
+app.use(express.json()); // para parsear application/json
+
+// Middleware de Rutas
 app.use('/api/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;

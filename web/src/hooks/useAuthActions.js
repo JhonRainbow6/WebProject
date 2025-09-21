@@ -1,0 +1,77 @@
+import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
+
+export const useAuthActions = () => {
+    const { setUser, setLoading, setError } = useAuth();
+    const navigate = useNavigate();
+
+    const login = async (email, password) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const res = await axios.post('http://localhost:5000/api/auth/login', {
+                email,
+                password
+            });
+
+            if (res.data.data && res.data.data.token) {
+                localStorage.setItem('token', res.data.data.token);
+                await fetchUserData();
+                navigate('/dashboard');
+            }
+        } catch (err) {
+            setError(err.response?.data?.error || 'Error al iniciar sesión');
+            localStorage.removeItem('token');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const logout = useCallback(() => {
+        setLoading(true);
+        try {
+            localStorage.removeItem('token');
+            setUser(null);
+            navigate('/login');
+        } catch (error) {
+            setError('Error al cerrar sesión');
+        } finally {
+            setLoading(false);
+        }
+    }, [navigate, setUser, setError, setLoading]);
+
+    const fetchUserData = useCallback(async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setUser(null);
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const res = await axios.get('http://localhost:5000/api/auth/user', {
+                headers: {
+                    'auth-token': token
+                }
+            });
+
+            if (res.data && res.data.data && res.data.data.user) {
+                setUser(res.data.data.user);
+            }
+        } catch (err) {
+            setError(err.response?.data?.error || 'Error al obtener datos del usuario');
+            localStorage.removeItem('token');
+            navigate('/login');
+        } finally {
+            setLoading(false);
+        }
+    }, [navigate, setUser, setError, setLoading]);
+
+    return {
+        login,
+        logout,
+        fetchUserData
+    };
+};

@@ -1,47 +1,56 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useAuthActions } from '../hooks/useAuthActions';
 
 const Login = () => {
     const [formData, setFormData] = useState({
         email: '',
-        password: '',
+        password: ''
     });
-    const [error, setError] = useState('');
-    const navigate = useNavigate(); // 1. Inicializar useNavigate
+    const { loading, error } = useAuth();
+    const { login } = useAuthActions();
 
-    const { email, password } = formData;
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    const onSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const res = await axios.post('http://localhost:5000/api/auth/login', formData);
-
-            //Guardado del token en localStorage
-            localStorage.setItem('token', res.data.token);
-            setError(''); // Limpia errores si el login es exitoso
-            //Redirigir a Dashboard
-            navigate('/dashboard');
-
-        } catch (err) {
-            if (err.response && err.response.data) {
-                setError(err.response.data.error || 'Ocurrió un error');
-            } else {
-                setError('No se pudo conectar con el servidor.');
-            }
-        }
+        await login(formData.email, formData.password);
     };
 
     return (
         <div>
-            <form onSubmit={onSubmit}>
-                <h2>Iniciar Sesión</h2>
+            <h2>Iniciar Sesión</h2>
+            <form onSubmit={handleSubmit}>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <input type="email" name="email" value={email} onChange={onChange} placeholder="Email" required />
-                <input type="password" name="password" value={password} onChange={onChange} placeholder="Contraseña" required />
-                <button type="submit">Iniciar Sesión</button>
+                <div>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Email"
+                        required
+                    />
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Contraseña"
+                        required
+                    />
+                </div>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Cargando...' : 'Iniciar Sesión'}
+                </button>
             </form>
             <p>
                 ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>

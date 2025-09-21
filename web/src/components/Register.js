@@ -1,42 +1,81 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 const Register = () => {
     const [formData, setFormData] = useState({
-        name: '',
         email: '',
-        password: '',
+        password: ''
     });
-    const [error, setError] = useState('');
+    const { loading, setLoading, error, setError } = useAuth();
+    const navigate = useNavigate();
 
-    const { name, email, password } = formData;
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+        // Limpiar error cuando el usuario empieza a escribir
+        if (error) setError(null);
+    };
 
-    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-    const onSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError(null);
+
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/register', formData);
-            console.log(res.data); // Proceso de registro exitoso
-            setError(''); // Limpia errores si el registro es exitoso
-            // Guardar el token y redirigir, o muestra el mensaje de éxito
-        } catch (err) {
-            if (err.response && err.response.data) {
-                setError(err.response.data.error || 'Ocurrió un error en el registro');
-            } else {
-                setError('No se pudo conectar con el servidor.');
+            const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+            if (response.data.error === null) {
+                // Registro exitoso
+                navigate('/login');
             }
+        } catch (err) {
+            setError(err.response?.data?.error || 'Error en el registro');
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <form onSubmit={onSubmit}>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <input type="text" name="name" value={name} onChange={onChange} placeholder="Nombre" required />
-            <input type="email" name="email" value={email} onChange={onChange} placeholder="Email" required />
-            <input type="password" name="password" value={password} onChange={onChange} placeholder="Contraseña" required />
-            <button type="submit">Registrarse</button>
-        </form>
+        <div>
+            <h2>Registro</h2>
+            <form onSubmit={handleSubmit}>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                <div>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Email"
+                        required
+                        disabled={loading}
+                    />
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Contraseña"
+                        required
+                        disabled={loading}
+                    />
+                </div>
+                <button
+                    type="submit"
+                    disabled={loading || !formData.email || !formData.password}
+                >
+                    {loading ? 'Registrando...' : 'Registrarse'}
+                </button>
+            </form>
+            <p>
+                ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link>
+            </p>
+        </div>
     );
 };
 
