@@ -3,12 +3,13 @@ import axios from 'axios';
 
 const Register = () => {
     const [formData, setFormData] = useState({
-        nombre: '',
+        name: '',
         email: '',
         password: '',
     });
+    const [error, setError] = useState('');
 
-    const { nombre, email, password } = formData;
+    const { name, email, password } = formData;
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -16,16 +17,22 @@ const Register = () => {
         e.preventDefault();
         try {
             const res = await axios.post('http://localhost:5000/api/auth/register', formData);
-            console.log(res.data); // Recibir token
-            // Guardar token y redirigir
+            console.log(res.data); // Proceso de registro exitoso
+            setError(''); // Limpia errores si el registro es exitoso
+            // Guardar el token y redirigir, o muestra el mensaje de éxito
         } catch (err) {
-            console.error(err.response.data);
+            if (err.response && err.response.data) {
+                setError(err.response.data.error || 'Ocurrió un error en el registro');
+            } else {
+                setError('No se pudo conectar con el servidor.');
+            }
         }
     };
 
     return (
         <form onSubmit={onSubmit}>
-            <input type="text" name="nombre" value={nombre} onChange={onChange} placeholder="Nombre" required />
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <input type="text" name="name" value={name} onChange={onChange} placeholder="Nombre" required />
             <input type="email" name="email" value={email} onChange={onChange} placeholder="Email" required />
             <input type="password" name="password" value={password} onChange={onChange} placeholder="Contraseña" required />
             <button type="submit">Registrarse</button>
