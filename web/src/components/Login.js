@@ -23,38 +23,70 @@ const Login = () => {
         await login(formData.email, formData.password);
     };
 
+    const handleGoogleSignIn = () => {
+        // Implementar inicio de sesión con Google
+        console.log('Inicio de sesión con Google');
+    };
+
     return (
-        <div>
-            <h2>Iniciar Sesión</h2>
-            <form onSubmit={handleSubmit}>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <div>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Email"
-                        required
-                    />
+        <div className="login-container">
+            <div className="login-card">
+                <div className="login-header">
+                    <p>Welcome to</p>
+                    <h1>CAP</h1>
                 </div>
-                <div>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Contraseña"
-                        required
-                    />
+
+                <form onSubmit={handleSubmit} className="login-form">
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                    <div className="form-group">
+                        <label>Enter your email address</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Enter your Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <Link to="/forgot-password" className="forgot-password">
+                        Forgot Password
+                    </Link>
+
+                    <button type="submit" className="signin-button" disabled={loading}>
+                        {loading ? 'Loading...' : 'Sign in'}
+                    </button>
+
+                    <button
+                        type="button"
+                        className="google-signin"
+                        onClick={handleGoogleSignIn}
+                    >
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                             alt="Google"
+                             style={{ width: '18px', height: '18px' }}
+                        />
+                        Sign in with Google
+                    </button>
+                </form>
+
+                <div className="signup-link">
+                    No Account?
+                    <Link to="/register">Sign up</Link>
                 </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Cargando...' : 'Iniciar Sesión'}
-                </button>
-            </form>
-            <p>
-                ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
-            </p>
+            </div>
         </div>
     );
 };
