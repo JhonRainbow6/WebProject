@@ -39,42 +39,67 @@ const Register = () => {
     };
 
     return (
-        <div>
-            <h2>Registro</h2>
-            <form onSubmit={handleSubmit}>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <div>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Email"
-                        required
-                        disabled={loading}
-                    />
+        <div className="login-container">
+            <div className="login-card">
+                <div className="login-header">
+                    <p>Create Account in</p>
+                    <h1>CAP</h1>
                 </div>
-                <div>
-                    <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Contraseña"
-                        required
-                        disabled={loading}
-                    />
+
+                <form onSubmit={handleSubmit} className="login-form">
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+
+                    <div className="form-group">
+                        <label>Enter your email address</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            disabled={loading}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Create a Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                            disabled={loading}
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="signin-button"
+                        disabled={loading || !formData.email || !formData.password}
+                    >
+                        {loading ? 'Creating Account...' : 'Create Account'}
+                    </button>
+
+                    <button
+                        type="button"
+                        className="google-signin"
+                        onClick={() => console.log('Google sign up clicked')}
+                    >
+                        <img
+                            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                            alt="Google"
+                            style={{ width: '18px', height: '18px' }}
+                        />
+                        Sign up with Google
+                    </button>
+                </form>
+
+                <div className="signup-link">
+                    Already have an account?
+                    <Link to="/login">Sign in</Link>
                 </div>
-                <button
-                    type="submit"
-                    disabled={loading || !formData.email || !formData.password}
-                >
-                    {loading ? 'Registrando...' : 'Registrarse'}
-                </button>
-            </form>
-            <p>
-                ¿Ya tienes una cuenta? <Link to="/login">Inicia sesión aquí</Link>
-            </p>
+            </div>
         </div>
     );
 };
