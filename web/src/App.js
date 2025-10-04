@@ -5,7 +5,8 @@ import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
-import PrivateRoute from './components/PrivateRoute'; //Importar PrivateRoute
+import DealsOfDay from './components/DealsOfDay';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
     return (
@@ -16,14 +17,33 @@ function App() {
                         <Route path="/" element={<Navigate to="/login" />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        {/* Proteccion ruta Dashboard */}
-                        <Route
-                            path="/dashboard" element={
-                                <PrivateRoute>
-                                    <Dashboard />
-                                </PrivateRoute>
-                            }
-                        />
+                        <Route path="/dashboard" element={
+                            <PrivateRoute>
+                                <Dashboard />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/deals" element={
+                            <PrivateRoute>
+                                <div className="layout-container">
+                                    <aside className="sidebar">
+                                        <div className="sidebar-icons">
+                                            <div className="icon-group">
+                                                <button className="sidebar-icon" onClick={() => window.location.href='/dashboard'}>
+                                                    <i className="fas fa-th"></i>
+                                                </button>
+                                                <button className="sidebar-icon">
+                                                    <i className="fas fa-gamepad"></i>
+                                                </button>
+                                                <button className="sidebar-icon">
+                                                    <i className="fas fa-shopping-cart"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </aside>
+                                    <DealsOfDay />
+                                </div>
+                            </PrivateRoute>
+                        } />
                     </Routes>
                 </div>
             </Router>
