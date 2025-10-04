@@ -1,0 +1,174 @@
+.deals-page {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #0a0a1e 0%, #1a1a2e 100%);
+}
+
+.deals-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.deals-container h1 {
+  color: white;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.deals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.deal-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.deal-card:hover {
+  transform: translateY(-5px);
+}
+
+.deal-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.deal-info {
+  padding: 15px;
+}
+
+.deal-info h3 {
+  color: white;
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  height: 2.4em;
+  overflow: hidden;
+}
+
+.deal-prices {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.normal-price {
+  color: #999;
+  text-decoration: line-through;
+  font-size: 0.9rem;
+}
+
+.sale-price {
+  color: #0095ff;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.savings {
+  background: #0095ff;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.buy-button {
+  width: 100%;
+  background: #0095ff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.buy-button:hover {
+  background: #0077cc;
+}
+
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a1e 0%, #1a1a2e 100%);
+}
+
+.layout-container .sidebar {
+  position: fixed;
+  height: 100vh;
+  z-index: 100;
+}
+
+.layout-container .deals-page {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  color: white;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top-color: #0095ff;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.error-container i {
+  font-size: 48px;
+  color: #ff4444;
+  margin-bottom: 20px;
+}
+
+.error-container p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.retry-button {
+  background: #0095ff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+}
+
+.retry-button:hover {
+  background: #0077cc;
+}
