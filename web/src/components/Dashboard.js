@@ -1,26 +1,24 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAuthActions } from '../hooks/useAuthActions';
 
 const Dashboard = () => {
     const { user, loading, error } = useAuth();
     const { logout, fetchUserData } = useAuthActions();
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchUserData();
     }, [fetchUserData]);
 
-    if (loading) {
-        return <div>Cargando...</div>;
-    }
+    const handleDealsClick = () => {
+        navigate('/deals');
+    };
 
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
-    if (!user) {
-        return <div>No se encontró información del usuario</div>;
-    }
+    if (loading) return <div>Cargando...</div>;
+    if (error) return <div>Error: {error}</div>;
+    if (!user) return <div>No se encontró información del usuario</div>;
 
     return (
         <div className="dashboard-container">
@@ -33,7 +31,7 @@ const Dashboard = () => {
                         <button className="sidebar-icon">
                             <i className="fas fa-gamepad"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleDealsClick}>
                             <i className="fas fa-shopping-cart"></i>
                         </button>
                         <button className="sidebar-icon">
@@ -70,8 +68,9 @@ const Dashboard = () => {
                     <div className="grid-item library">
                         <h3>Library</h3>
                     </div>
-                    <div className="grid-item deals">
-                        <h3>Deals of the day</h3>
+                    <div className="grid-item deals" onClick={handleDealsClick} style={{ cursor: 'pointer' }}>
+                        <h3>Deals of the Day</h3>
+                        <p>¡Haz clic para ver las ofertas especiales de Ubisoft!</p>
                     </div>
                     <div className="grid-item ubisoft">
                         <h3>Ubisoft+</h3>
