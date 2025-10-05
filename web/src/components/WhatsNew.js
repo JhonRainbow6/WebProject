@@ -1,38 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import './WhatsNew.css';
 
+// Definición de tipo implícita para los artículos de noticias
+/**
+ * @typedef {Object} Article
+ * @property {string} title - Título del artículo
+ * @property {string} [description] - Descripción del artículo (opcional)
+ * @property {string} url - URL del artículo original
+ * @property {string} [urlToImage] - URL de la imagen del artículo (opcional)
+ * @property {string} publishedAt - Fecha de publicación
+ * @property {Object} source - Fuente del artículo
+ * @property {string} source.name - Nombre de la fuente
+ * @property {string} [author] - Autor del artículo (opcional)
+ */
+
 const WhatsNew = () => {
+    /** @type {[Article[], React.Dispatch<React.SetStateAction<Article[]>>]} */
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchNews = async () => {
+        (async () => {
             try {
                 // Llamamos a nuestro propio endpoint que ahora filtra solo noticias de Ubisoft
                 const response = await fetch('http://localhost:5000/api/news/gaming');
 
                 if (!response.ok) {
-                    throw new Error('No se pudieron cargar las noticias de Ubisoft');
+                    setError('No se pudieron cargar las noticias de Ubisoft');
+                    return;
                 }
 
                 const data = await response.json();
 
-                // Verificamos que tengamos artículos para mostrar
-                if (data.articles && data.articles.length > 0) {
+                // Verificamos que tengamos artículos para mostrar y que tengan la estructura esperada
+                if (data && data.articles && Array.isArray(data.articles) && data.articles.length > 0) {
                     setNews(data.articles);
                 } else {
-                    throw new Error('No se encontraron artículos de Ubisoft');
+                    setError('No se encontraron artículos de Ubisoft');
                 }
             } catch (err) {
-                setError(err.message);
+                setError(err.message || 'Error al cargar las noticias');
                 console.error('Error al obtener noticias de Ubisoft:', err);
             } finally {
                 setLoading(false);
             }
-        };
-
-        fetchNews();
+        })();
     }, []);
 
     if (loading) return <div className="loading-container">Cargando noticias de Ubisoft...</div>;
@@ -48,19 +61,21 @@ const WhatsNew = () => {
             <div className="news-grid">
                 {news.map((article, index) => (
                     <div className="news-card" key={index} onClick={() => window.open(article.url, '_blank')}>
-                        {article.urlToImage && (
+                        {article && article.urlToImage && (
                             <div className="news-image">
-                                <img src={article.urlToImage} alt={article.title} />
+                                <img src={article.urlToImage} alt={article.title || 'Noticia de Ubisoft'} />
                             </div>
                         )}
                         <div className="news-content">
-                            <h3>{article.title}</h3>
+                            <h3>{article && article.title || 'Noticia de Ubisoft'}</h3>
                             <div className="news-meta">
-                                <span>Fuente: {article.source.name}</span>
-                                <span>Fecha: {new Date(article.publishedAt).toLocaleDateString('es-ES')}</span>
+                                <span>Fuente: {article && article.source && article.source.name || 'Desconocida'}</span>
+                                <span>Fecha: {article && article.publishedAt ? 
+                                    new Date(article.publishedAt).toLocaleDateString('es-ES') : 
+                                    'Fecha desconocida'}</span>
                             </div>
                             <p className="news-excerpt">
-                                {article.description ?
+                                {article && article.description ?
                                     (article.description.length > 150 ?
                                         `${article.description.substring(0, 150)}...` :
                                         article.description) :
@@ -68,7 +83,7 @@ const WhatsNew = () => {
                             </p>
                             <div className="news-tags">
                                 <span className="tag">Ubisoft</span>
-                                {article.author && <span className="tag">Por: {article.author}</span>}
+                                {article && article.author && <span className="tag">Por: {article.author}</span>}
                             </div>
                         </div>
                     </div>
