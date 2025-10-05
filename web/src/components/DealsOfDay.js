@@ -59,7 +59,12 @@ const DealsOfDay = () => {
                                     <span className="sale-price">${deal.salePrice}</span>
                                     <span className="savings">-{Math.round(deal.savings)}%</span>
                                 </div>
-                                <button className="buy-button">Comprar Ahora</button>
+                                <button
+                                    className="buy-button"
+                                    onClick={() => window.open(`https://www.cheapshark.com/redirect?dealID=${deal.dealID}`, "_blank")}
+                                >
+                                    Comprar Ahora
+                                </button>
                             </div>
                         </div>
                     ))}

@@ -10,7 +10,14 @@ const Dashboard = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetchUserData();
+        const loadUserData = async () => {
+            try {
+                await fetchUserData();
+            } catch (error) {
+                console.error("Error al cargar los datos del usuario:", error);
+            }
+        };
+        loadUserData().catch(console.error);
     }, [fetchUserData]);
 
     const handleDealsClick = () => {
@@ -42,8 +49,8 @@ const Dashboard = () => {
                         <button className="sidebar-icon">
                             <i className="fas fa-users"></i>
                         </button>
-                        <button className="sidebar-icon">
-                            <i className="fas fa-desktop"></i>
+                        <button className="sidebar-icon" onClick={handleWhatsNewClick}>
+                            <i className="fas fa-newspaper"></i>
                         </button>
                     </div>
                     <div className="icon-bottom">
@@ -67,12 +74,9 @@ const Dashboard = () => {
                     <div className="grid-item friends">
                         <h3>Friends</h3>
                     </div>
-                    <div className="grid-item whats-new">
+                    <div className="grid-item whats-new" onClick={handleWhatsNewClick} style={{ cursor: 'pointer' }}>
                         <h3>What's New?</h3>
-                        <div className="whats-new-content">
-                            <p>Descubre las últimas novedades y actualizaciones.</p>
-                            <button onClick={handleWhatsNewClick}>Ver Novedades</button>
-                        </div>
+                        <p>Descubre las últimas novedades y actualizaciones de Ubisoft.</p>
                     </div>
                     <div className="grid-item library">
                         <h3>Library</h3>
