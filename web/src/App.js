@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import DealsOfDay from './components/DealsOfDay';
+import WhatsNew from './components/WhatsNew';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -42,6 +43,11 @@ function App() {
                                     </aside>
                                     <DealsOfDay />
                                 </div>
+                            </PrivateRoute>
+                        } />
+                        <Route path="/whats-new" element={
+                            <PrivateRoute>
+                                <WhatsNew />
                             </PrivateRoute>
                         } />
                     </Routes>

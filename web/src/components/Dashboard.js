@@ -17,6 +17,10 @@ const Dashboard = () => {
         navigate('/deals');
     };
 
+    const handleWhatsNewClick = () => {
+        navigate('/whats-new');
+    };
+
     if (loading) return <div>Cargando...</div>;
     if (error) return <div>Error: {error}</div>;
     if (!user) return <div>No se encontró información del usuario</div>;
@@ -65,6 +69,10 @@ const Dashboard = () => {
                     </div>
                     <div className="grid-item whats-new">
                         <h3>What's New?</h3>
+                        <div className="whats-new-content">
+                            <p>Descubre las últimas novedades y actualizaciones.</p>
+                            <button onClick={handleWhatsNewClick}>Ver Novedades</button>
+                        </div>
                     </div>
                     <div className="grid-item library">
                         <h3>Library</h3>
