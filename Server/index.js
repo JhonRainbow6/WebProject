@@ -11,6 +11,7 @@ const app = express();
 // Importar Rutas
 const authRoutes = require('./routes/auth');
 const dealsRoutes = require('./routes/deals');
+const newsRoutes = require('./routes/news');
 
 // Conectar a la DB
 const dbConnectionString = process.env.DB_CONNECTION_STRING.replace('<db_password>', process.env.DB_PASSWORD);
@@ -25,6 +26,7 @@ app.use(express.json()); // para parsear application/json
 // Middleware de Rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/deals', dealsRoutes);
+app.use('/api/news', newsRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
