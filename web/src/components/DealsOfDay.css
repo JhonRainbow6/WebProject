@@ -107,8 +107,8 @@
 }
 
 .layout-container .deals-page {
-  margin-left: 80px;
-  width: calc(100% - 80px);
+  margin-left: 0;
+  width: 100%;
 }
 
 .loading-container {

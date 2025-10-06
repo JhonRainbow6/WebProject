@@ -25,24 +25,7 @@ function App() {
                         } />
                         <Route path="/deals" element={
                             <PrivateRoute>
-                                <div className="layout-container">
-                                    <aside className="sidebar">
-                                        <div className="sidebar-icons">
-                                            <div className="icon-group">
-                                                <button className="sidebar-icon" onClick={() => window.location.href='/dashboard'}>
-                                                    <i className="fas fa-th"></i>
-                                                </button>
-                                                <button className="sidebar-icon">
-                                                    <i className="fas fa-gamepad"></i>
-                                                </button>
-                                                <button className="sidebar-icon">
-                                                    <i className="fas fa-shopping-cart"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </aside>
-                                    <DealsOfDay />
-                                </div>
+                                <DealsOfDay />
                             </PrivateRoute>
                         } />
                         <Route path="/whats-new" element={

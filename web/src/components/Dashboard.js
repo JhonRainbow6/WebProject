@@ -76,18 +76,19 @@ const Dashboard = () => {
                     </div>
                     <div className="grid-item whats-new" onClick={handleWhatsNewClick} style={{ cursor: 'pointer' }}>
                         <h3>What's New?</h3>
-                        <p>Descubre las últimas novedades y actualizaciones de Ubisoft.</p>
+                        <p>Ultimas novedades y actualizaciones relacionadas con Ubisoft.</p>
                     </div>
                     <div className="grid-item library">
                         <h3>Library</h3>
                     </div>
                     <div className="grid-item deals" onClick={handleDealsClick} style={{ cursor: 'pointer' }}>
                         <h3>Deals of the Day</h3>
-                        <p>¡Haz clic para ver las ofertas especiales de Ubisoft!</p>
+                        <p>¡Descubre las ofertas especiales de UPlay el dia de hoy!</p>
                     </div>
-                    <div className="grid-item ubisoft">
+                    <a href="https://store.ubisoft.com/us/ubisoftplus" target="_blank" rel="noopener noreferrer" className="grid-item ubisoft" style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
                         <h3>Ubisoft+</h3>
-                    </div>
+                        <p>¡Suscribete a U+ para obtener acceso a un amplio catalogo de juegos!</p>
+                    </a>
                 </div>
             </main>
         </div>
