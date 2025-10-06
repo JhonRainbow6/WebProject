@@ -73,6 +73,10 @@ const WhatsNew = () => {
         navigate('/deals');
     };
 
+    const handleProfileClick = () => {
+        navigate('/profile');
+    };
+
     if (loading) return <div className="loading-container">Cargando noticias de Ubisoft...</div>;
     if (error) return <div className="error-container">Error: {error}</div>;
 
@@ -98,7 +102,7 @@ const WhatsNew = () => {
                         </button>
                     </div>
                     <div className="icon-bottom">
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleProfileClick}>
                             <i className="fas fa-user"></i>
                         </button>
                         <button className="sidebar-icon" onClick={logout}>
@@ -110,8 +114,8 @@ const WhatsNew = () => {
             <div className="whats-new-page">
                 <div className="whats-new-container">
                     <header className="whats-new-header">
-                        <h1>Noticias de Ubisoft</h1>
-                        <p>Mantente al día con las últimas novedades de Ubisoft y sus juegos</p>
+                        <h1>What's New?</h1>
+                        <p>Mantente al día con las últimas novedades relacionadas con Ubisoft</p>
                     </header>
 
                     <div className="news-grid">

@@ -16,7 +16,7 @@
     background-color: #1e1e1e;
     padding: 2rem;
     border-radius: 8px;
-    max-width: 600px;
+    max-width: 500px;
     margin: auto;
 }
 
@@ -30,6 +30,7 @@
 
 .form-group {
     margin-bottom: 1.5rem;
+    max-width: 480px;
 }
 
 .form-group label {

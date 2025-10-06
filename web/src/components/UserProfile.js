@@ -28,12 +28,17 @@ const UserProfile = () => {
 
         try {
             // Llamar a la función para cambiar la contraseña
-            const message = await changePassword(currentPassword, newPassword);
-            setSuccess(message);
+            const data = await changePassword(currentPassword, newPassword);
+            setSuccess(`${data.message} Cerrarándo sesion...`);
             // Limpiar los campos tras el éxito
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
+
+            // Se cerrara la sesión automáticamente después de 3 segundos
+            setTimeout(() => {
+                logout();
+            }, 3000);
         } catch (err) {
             // Mostrar el mensaje de error del servidor
             setError(err.message || 'Ocurrió un error al cambiar la contraseña.');
@@ -117,4 +122,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-
