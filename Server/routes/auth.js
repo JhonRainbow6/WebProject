@@ -3,6 +3,36 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const multer = require('multer');
+const path = require('path');
+
+// Configuración de multer para el almacenamiento de imágenes
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/profiles/');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // límite de 5MB
+    },
+    fileFilter: (req, file, cb) => {
+        const filetypes = /jpeg|jpg|png/;
+        const mimetype = filetypes.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+        if (mimetype && extname) {
+            return cb(null, true);
+        }
+        cb(new Error('Solo se permiten imágenes (jpeg, jpg, png)'));
+    }
+});
 
 // Esquema de validación del registro
 const registerSchema = Joi.object({
@@ -132,6 +162,55 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Esquema de validación para cambiar contraseña
+const changePasswordSchema = Joi.object({
+    currentPassword: Joi.string().min(6).required(),
+    newPassword: Joi.string().min(6).required()
+});
+
+// Cambiar la contraseña del usuario
+router.post('/change-password', verifyToken, async (req, res) => {
+    // Validar los datos del body
+    const { error } = changePasswordSchema.validate(req.body);
+    if (error) {
+        let message = error.details[0].message;
+        if (message.includes('currentPassword')) {
+            message = 'La contraseña actual debe tener al menos 6 caracteres.';
+        } else if (message.includes('newPassword')) {
+            message = 'La nueva contraseña debe tener al menos 6 caracteres.';
+        }
+        return res.status(400).json({ error: message });
+    }
+
+    try {
+        // Encontrar al usuario
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        // Verificar la contraseña actual
+        const validPassword = await bcrypt.compare(req.body.currentPassword, user.password);
+        if (!validPassword) {
+            return res.status(400).json({ error: 'La contraseña actual es incorrecta.' });
+        }
+
+        // Hashear la nueva contraseña
+        const salt = await bcrypt.genSalt(10);
+        const hashedNewPassword = await bcrypt.hash(req.body.newPassword, salt);
+
+        // Actualizar la contraseña
+        user.password = hashedNewPassword;
+        await user.save();
+
+        res.json({ message: 'Contraseña actualizada correctamente.' });
+
+    } catch (error) {
+        console.error('Error al cambiar la contraseña:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+});
+
 // Obtener información del usuario
 router.get('/user', verifyToken, async (req, res) => {
     try {
@@ -151,6 +230,30 @@ router.get('/user', verifyToken, async (req, res) => {
     } catch (error) {
         console.error('Error al obtener usuario:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+// Ruta para actualizar la imagen de perfil
+router.post('/update-profile-image', verifyToken, upload.single('profileImage'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No se ha subido ninguna imagen' });
+        }
+
+        const imageUrl = `/uploads/profiles/${req.file.filename}`;
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { profileImage: imageUrl },
+            { new: true }
+        ).select('-password');
+
+        res.json({
+            error: null,
+            data: { user }
+        });
+    } catch (error) {
+        console.error('Error al actualizar la imagen de perfil:', error);
+        res.status(500).json({ error: 'Error al actualizar la imagen de perfil' });
     }
 });
 

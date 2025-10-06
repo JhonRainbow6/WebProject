@@ -28,6 +28,10 @@ const Dashboard = () => {
         navigate('/whats-new');
     };
 
+    const handleProfileClick = () => {
+        navigate('/profile');
+    };
+
     if (loading) return <div>Cargando...</div>;
     if (error) return <div>Error: {error}</div>;
     if (!user) return <div>No se encontró información del usuario</div>;
@@ -54,7 +58,7 @@ const Dashboard = () => {
                         </button>
                     </div>
                     <div className="icon-bottom">
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleProfileClick}>
                             <i className="fas fa-user"></i>
                         </button>
                         <button className="sidebar-icon" onClick={logout}>
@@ -65,9 +69,18 @@ const Dashboard = () => {
             </aside>
             <main className="dashboard-main">
                 <div className="dashboard-grid">
-                    <div className="grid-item about-you">
+                    <div className="grid-item about-you" onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
                         <h3>About You</h3>
                         <div className="user-info">
+                            <div className="dashboard-profile-image">
+                                <img
+                                    src={user?.profileImage
+                                        ? `http://localhost:5000${user.profileImage}`
+                                        : 'https://via.placeholder.com/150'
+                                    }
+                                    alt="Foto de perfil"
+                                />
+                            </div>
                             <p>Bienvenido, {user.email}</p>
                         </div>
                     </div>

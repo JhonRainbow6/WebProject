@@ -69,9 +69,62 @@ export const useAuthActions = () => {
         }
     }, [navigate, setUser, setError, setLoading]);
 
+    const changePassword = async (currentPassword, newPassword) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('No autenticado');
+        }
+
+        try {
+            const res = await axios.post('http://localhost:5000/api/auth/change-password', {
+                currentPassword,
+                newPassword
+            }, {
+                headers: {
+                    'auth-token': token
+                }
+            });
+            return res.data;
+        } catch (err) {
+            throw new Error(err.response?.data?.error || 'Error al cambiar la contraseña');
+        }
+    };
+
+    const updateProfileImage = async (file) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('No autenticado');
+        }
+
+        const formData = new FormData();
+        formData.append('profileImage', file);
+
+        try {
+            const response = await axios.post(
+                'http://localhost:5000/api/auth/update-profile-image',
+                formData,
+                {
+                    headers: {
+                        'auth-token': token,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+
+            if (response.data && response.data.data && response.data.data.user) {
+                setUser(response.data.data.user);
+                return response.data;
+            }
+        } catch (err) {
+            throw new Error(err.response?.data?.error || 'Error al actualizar la imagen de perfil');
+        }
+    };
+
     return {
         login,
         logout,
-        fetchUserData
+        fetchUserData,
+        changePassword,
+        updateProfileImage
     };
 };

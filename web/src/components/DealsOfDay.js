@@ -18,7 +18,9 @@ const DealsOfDay = () => {
     const handleWhatsNewClick = () => {
         navigate('/whats-new');
     };
-
+    const handleProfileClick = () => {
+        navigate('/profile');
+    };
     useEffect(() => {
         let isMounted = true;
 
@@ -78,7 +80,7 @@ const DealsOfDay = () => {
                         </button>
                     </div>
                     <div className="icon-bottom">
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleProfileClick}>
                             <i className="fas fa-user"></i>
                         </button>
                         <button className="sidebar-icon" onClick={logout}>
@@ -89,7 +91,7 @@ const DealsOfDay = () => {
             </aside>
             <div className="deals-page">
                 <div className="deals-container">
-                    <h1>Ofertas del Día - Ubisoft</h1>
+                    <h1>Deals of the Day - UPlay</h1>
                     <div className="deals-grid">
                         {deals.map((/** @type {{ dealID: string; thumb: string; title: string; normalPrice: string; salePrice: string; savings: string; }} */ deal) => (
                             <div key={deal.dealID} className="deal-card">
