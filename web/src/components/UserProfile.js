@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthActions } from '../hooks/useAuthActions';
 import { useAuth } from '../context/AuthContext';
 import './UserProfile.css';
-import axios from 'axios';
 
 const UserProfile = () => {
     const [currentPassword, setCurrentPassword] = useState('');

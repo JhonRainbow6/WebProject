@@ -69,9 +69,18 @@ const Dashboard = () => {
             </aside>
             <main className="dashboard-main">
                 <div className="dashboard-grid">
-                    <div className="grid-item about-you">
+                    <div className="grid-item about-you" onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
                         <h3>About You</h3>
                         <div className="user-info">
+                            <div className="dashboard-profile-image">
+                                <img
+                                    src={user?.profileImage
+                                        ? `http://localhost:5000${user.profileImage}`
+                                        : 'https://via.placeholder.com/150'
+                                    }
+                                    alt="Foto de perfil"
+                                />
+                            </div>
                             <p>Bienvenido, {user.email}</p>
                         </div>
                     </div>

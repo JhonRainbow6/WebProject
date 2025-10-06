@@ -45,8 +45,8 @@
 
 .profile-image {
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 225px;  /* Aumentado de 150px a 225px (50% más grande) */
+    height: 225px; /* Aumentado de 150px a 225px (50% más grande) */
     border-radius: 50%;
     overflow: hidden;
     margin-bottom: 1rem;
