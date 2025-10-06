@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthActions } from '../hooks/useAuthActions';
+import { useAuth } from '../context/AuthContext';
 import './UserProfile.css';
+import axios from 'axios';
 
 const UserProfile = () => {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -9,8 +11,38 @@ const UserProfile = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [imageError, setImageError] = useState('');
+    const [imageSuccess, setImageSuccess] = useState('');
     const navigate = useNavigate();
-    const { logout, changePassword } = useAuthActions(); // Importar changePassword
+    const { user } = useAuth();
+    const { logout, changePassword, updateProfileImage } = useAuthActions();
+
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validar el tipo de archivo
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!validTypes.includes(file.type)) {
+            setImageError('Solo se permiten imágenes JPG, JPEG o PNG');
+            return;
+        }
+
+        // Validar el tamaño del archivo (5MB máximo)
+        if (file.size > 5 * 1024 * 1024) {
+            setImageError('La imagen no debe superar los 5MB');
+            return;
+        }
+
+        try {
+            await updateProfileImage(file);
+            setImageSuccess('Imagen de perfil actualizada correctamente');
+            setImageError('');
+        } catch (err) {
+            setImageError(err.message || 'Error al actualizar la imagen de perfil');
+            setImageSuccess('');
+        }
+    };
 
     const handleDealsClick = () => navigate('/deals');
     const handleWhatsNewClick = () => navigate('/whats-new');
@@ -78,43 +110,73 @@ const UserProfile = () => {
             </aside>
             <main className="user-profile-main">
                 <h3>Configuración de perfil</h3>
-                <div className="profile-settings">
-                    <h4>Cambiar Contraseña</h4>
-                    {error && <p className="error-message">{error}</p>}
-                    {success && <p className="success-message">{success}</p>}
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="current-password">Contraseña Actual</label>
-                            <input
-                                type="password"
-                                id="current-password"
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                                required
-                            />
+                <div className="profile-content">
+                    <div className="user-info-box">
+                        <h4>Información del Usuario</h4>
+                        <div className="profile-image-container">
+                            <div className="profile-image">
+                                <img
+                                    src={user?.profileImage
+                                        ? `http://localhost:5000${user.profileImage}`
+                                        : 'https://via.placeholder.com/150'
+                                    }
+                                    alt="Foto de perfil"
+                                />
+                                <label htmlFor="profile-image-input" className="image-upload-label">
+                                    <i className="fas fa-camera"></i>
+                                    <span>Cambiar foto</span>
+                                </label>
+                                <input
+                                    type="file"
+                                    id="profile-image-input"
+                                    accept="image/jpeg,image/jpg,image/png"
+                                    onChange={handleImageUpload}
+                                    style={{ display: 'none' }}
+                                />
+                            </div>
+                            {imageError && <p className="error-message">{imageError}</p>}
+                            {imageSuccess && <p className="success-message">{imageSuccess}</p>}
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="new-password">Nueva Contraseña</label>
-                            <input
-                                type="password"
-                                id="new-password"
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="confirm-password">Confirmar Nueva Contraseña</label>
-                            <input
-                                type="password"
-                                id="confirm-password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <button type="submit" className="btn-submit">Guardar Cambios</button>
-                    </form>
+                        <p><strong>Email:</strong> {user?.email}</p>
+                    </div>
+                    <div className="profile-settings">
+                        <h4>Cambiar Contraseña</h4>
+                        {error && <p className="error-message">{error}</p>}
+                        {success && <p className="success-message">{success}</p>}
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="current-password">Contraseña Actual</label>
+                                <input
+                                    type="password"
+                                    id="current-password"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="new-password">Nueva Contraseña</label>
+                                <input
+                                    type="password"
+                                    id="new-password"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="confirm-password">Confirmar Nueva Contraseña</label>
+                                <input
+                                    type="password"
+                                    id="confirm-password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <button type="submit" className="btn-submit">Guardar Cambios</button>
+                        </form>
+                    </div>
                 </div>
             </main>
         </div>

@@ -3,6 +3,36 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const multer = require('multer');
+const path = require('path');
+
+// Configuración de multer para el almacenamiento de imágenes
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/profiles/');
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, 'profile-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // límite de 5MB
+    },
+    fileFilter: (req, file, cb) => {
+        const filetypes = /jpeg|jpg|png/;
+        const mimetype = filetypes.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+        if (mimetype && extname) {
+            return cb(null, true);
+        }
+        cb(new Error('Solo se permiten imágenes (jpeg, jpg, png)'));
+    }
+});
 
 // Esquema de validación del registro
 const registerSchema = Joi.object({
@@ -200,6 +230,30 @@ router.get('/user', verifyToken, async (req, res) => {
     } catch (error) {
         console.error('Error al obtener usuario:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+// Ruta para actualizar la imagen de perfil
+router.post('/update-profile-image', verifyToken, upload.single('profileImage'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No se ha subido ninguna imagen' });
+        }
+
+        const imageUrl = `/uploads/profiles/${req.file.filename}`;
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { profileImage: imageUrl },
+            { new: true }
+        ).select('-password');
+
+        res.json({
+            error: null,
+            data: { user }
+        });
+    } catch (error) {
+        console.error('Error al actualizar la imagen de perfil:', error);
+        res.status(500).json({ error: 'Error al actualizar la imagen de perfil' });
     }
 });
 

@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv'); // Importar dotenv
 const cors = require('cors');
+const path = require('path');
 
 // Configurar dotenv ANTES de usar cualquier variable de entorno
 dotenv.config();
@@ -22,6 +23,7 @@ mongoose.connect(dbConnectionString)
 // Middlewares
 app.use(cors()); // Habilitar CORS para todas las rutas
 app.use(express.json()); // para parsear application/json
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Configurar la carpeta de uploads como estática
 
 // Middleware de Rutas
 app.use('/api/auth', authRoutes);

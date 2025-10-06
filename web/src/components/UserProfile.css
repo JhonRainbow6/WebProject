@@ -1,8 +1,19 @@
 .user-profile-container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #121212;
     color: white;
+
+}
+
+.profile-content {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .user-profile-main {
@@ -12,12 +23,70 @@
     margin-left: 60px;
 }
 
+.user-profile-main h3 {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.user-info-box {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 350px;
+    flex-shrink: 0;
+}
+
+.profile-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.profile-image {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-upload-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.profile-image:hover .image-upload-label {
+    opacity: 1;
+}
+
 .profile-settings {
     background-color: #1e1e1e;
     padding: 2rem;
     border-radius: 8px;
-    max-width: 500px;
-    margin: auto;
+    width: 450px;
+    flex-shrink: 0;
 }
 
 .profile-settings h4 {
@@ -30,7 +99,7 @@
 
 .form-group {
     margin-bottom: 1.5rem;
-    max-width: 480px;
+    width: 95%;
 }
 
 .form-group label {
@@ -58,6 +127,7 @@
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s;
+    width: 100%;
 }
 
 .btn-submit:hover {
@@ -72,4 +142,77 @@
 .success-message {
     color: #28a745;
     margin-bottom: 1rem;
+}
+
+/* Media Queries para diferentes tamaños de pantalla */
+@media (max-width: 1200px) {
+    .profile-content {
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .profile-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user-info-box,
+    .profile-settings {
+        width: 100%;
+        max-width: 600px;
+    }
+}
+
+@media (max-width: 768px) {
+    .user-profile-main {
+        margin-left: 50px;
+        padding: 1rem;
+    }
+
+    .user-info-box,
+    .profile-settings {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .user-profile-main {
+        margin-left: 40px;
+        padding: 0.5rem;
+    }
+
+    .profile-content {
+        padding: 0 0.5rem;
+    }
+
+    .user-info-box,
+    .profile-settings {
+        padding: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .btn-submit {
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* Ajustes para dispositivos móviles muy pequeños */
+@media (max-width: 360px) {
+    .user-profile-main {
+        margin-left: 35px;
+    }
+
+    .profile-image {
+        width: 120px;
+        height: 120px;
+    }
+
+    .user-info-box h4,
+    .profile-settings h4 {
+        font-size: 1.2rem;
+    }
 }
