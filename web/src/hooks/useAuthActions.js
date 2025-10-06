@@ -69,9 +69,31 @@ export const useAuthActions = () => {
         }
     }, [navigate, setUser, setError, setLoading]);
 
+    const changePassword = async (currentPassword, newPassword) => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('No autenticado');
+        }
+
+        try {
+            const res = await axios.post('http://localhost:5000/api/auth/change-password', {
+                currentPassword,
+                newPassword
+            }, {
+                headers: {
+                    'auth-token': token
+                }
+            });
+            return res.data;
+        } catch (err) {
+            throw new Error(err.response?.data?.error || 'Error al cambiar la contraseña');
+        }
+    };
+
     return {
         login,
         logout,
-        fetchUserData
+        fetchUserData,
+        changePassword
     };
 };

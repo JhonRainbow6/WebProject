@@ -28,6 +28,10 @@ const Dashboard = () => {
         navigate('/whats-new');
     };
 
+    const handleProfileClick = () => {
+        navigate('/profile');
+    };
+
     if (loading) return <div>Cargando...</div>;
     if (error) return <div>Error: {error}</div>;
     if (!user) return <div>No se encontró información del usuario</div>;
@@ -54,7 +58,7 @@ const Dashboard = () => {
                         </button>
                     </div>
                     <div className="icon-bottom">
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleProfileClick}>
                             <i className="fas fa-user"></i>
                         </button>
                         <button className="sidebar-icon" onClick={logout}>

@@ -132,6 +132,55 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Esquema de validación para cambiar contraseña
+const changePasswordSchema = Joi.object({
+    currentPassword: Joi.string().min(6).required(),
+    newPassword: Joi.string().min(6).required()
+});
+
+// Cambiar la contraseña del usuario
+router.post('/change-password', verifyToken, async (req, res) => {
+    // Validar los datos del body
+    const { error } = changePasswordSchema.validate(req.body);
+    if (error) {
+        let message = error.details[0].message;
+        if (message.includes('currentPassword')) {
+            message = 'La contraseña actual debe tener al menos 6 caracteres.';
+        } else if (message.includes('newPassword')) {
+            message = 'La nueva contraseña debe tener al menos 6 caracteres.';
+        }
+        return res.status(400).json({ error: message });
+    }
+
+    try {
+        // Encontrar al usuario
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        // Verificar la contraseña actual
+        const validPassword = await bcrypt.compare(req.body.currentPassword, user.password);
+        if (!validPassword) {
+            return res.status(400).json({ error: 'La contraseña actual es incorrecta.' });
+        }
+
+        // Hashear la nueva contraseña
+        const salt = await bcrypt.genSalt(10);
+        const hashedNewPassword = await bcrypt.hash(req.body.newPassword, salt);
+
+        // Actualizar la contraseña
+        user.password = hashedNewPassword;
+        await user.save();
+
+        res.json({ message: 'Contraseña actualizada correctamente.' });
+
+    } catch (error) {
+        console.error('Error al cambiar la contraseña:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+});
+
 // Obtener información del usuario
 router.get('/user', verifyToken, async (req, res) => {
     try {

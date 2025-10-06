@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import DealsOfDay from './components/DealsOfDay';
 import WhatsNew from './components/WhatsNew';
 import PrivateRoute from './components/PrivateRoute';
+import UserProfile from './components/UserProfile';
 
 function App() {
     return (
@@ -31,6 +32,11 @@ function App() {
                         <Route path="/whats-new" element={
                             <PrivateRoute>
                                 <WhatsNew />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/profile" element={
+                            <PrivateRoute>
+                                <UserProfile />
                             </PrivateRoute>
                         } />
                     </Routes>
