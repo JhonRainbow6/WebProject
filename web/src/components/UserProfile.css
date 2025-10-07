@@ -45,8 +45,8 @@
 
 .profile-image {
     position: relative;
-    width: 225px;  /* Aumentado de 150px a 225px (50% más grande) */
-    height: 225px; /* Aumentado de 150px a 225px (50% más grande) */
+    width: 225px;
+    height: 225px;
     border-radius: 50%;
     overflow: hidden;
     margin-bottom: 1rem;
@@ -144,6 +144,48 @@
     margin-bottom: 1rem;
 }
 
+/* Estilos para la sección de plataformas */
+.platforms-box {
+    background-color: #1e1e1e;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 2rem auto 0;
+}
+
+.platforms-box h4 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #333;
+    padding-bottom: 1rem;
+}
+
+.platforms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+.platform-icon {
+    width: 60px;
+    height: 60px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+.platform-icon.active {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+.platform-icon:hover {
+    transform: scale(1.1);
+}
+
 /* Media Queries para diferentes tamaños de pantalla */
 @media (max-width: 1200px) {
     .profile-content {
@@ -162,6 +204,12 @@
         width: 100%;
         max-width: 600px;
     }
+
+    .platforms-box {
+        width: 100%;
+        max-width: 600px;
+        margin-top: 2rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -171,7 +219,8 @@
     }
 
     .user-info-box,
-    .profile-settings {
+    .profile-settings,
+    .platforms-box {
         padding: 1.5rem;
     }
 }
@@ -187,7 +236,8 @@
     }
 
     .user-info-box,
-    .profile-settings {
+    .profile-settings,
+    .platforms-box {
         padding: 1rem;
     }
 

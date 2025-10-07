@@ -12,6 +12,12 @@ const UserProfile = () => {
     const [success, setSuccess] = useState('');
     const [imageError, setImageError] = useState('');
     const [imageSuccess, setImageSuccess] = useState('');
+    const [activePlatforms, setActivePlatforms] = useState({
+        steam: false,
+        xbox: false,
+        playstation: false
+    });
+
     const navigate = useNavigate();
     const { user } = useAuth();
     const { logout, changePassword, updateProfileImage } = useAuthActions();
@@ -41,6 +47,13 @@ const UserProfile = () => {
             setImageError(err.message || 'Error al actualizar la imagen de perfil');
             setImageSuccess('');
         }
+    };
+
+    const togglePlatform = (platform) => {
+        setActivePlatforms(prev => ({
+            ...prev,
+            [platform]: !prev[platform]
+        }));
     };
 
     const handleDealsClick = () => navigate('/deals');
@@ -175,6 +188,29 @@ const UserProfile = () => {
                             </div>
                             <button type="submit" className="btn-submit">Guardar Cambios</button>
                         </form>
+                    </div>
+                </div>
+                <div className="platforms-box">
+                    <h4>Plataformas</h4>
+                    <div className="platforms-grid">
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/512px-Steam_icon_logo.svg.png"
+                            alt="Steam"
+                            className={`platform-icon ${activePlatforms.steam ? 'active' : ''}`}
+                            onClick={() => togglePlatform('steam')}
+                        />
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/512px-Xbox_one_logo.svg.png"
+                            alt="Xbox"
+                            className={`platform-icon ${activePlatforms.xbox ? 'active' : ''}`}
+                            onClick={() => togglePlatform('xbox')}
+                        />
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Playstation_logo_colour.svg/512px-Playstation_logo_colour.svg.png"
+                            alt="PlayStation"
+                            className={`platform-icon ${activePlatforms.playstation ? 'active' : ''}`}
+                            onClick={() => togglePlatform('playstation')}
+                        />
                     </div>
                 </div>
             </main>
