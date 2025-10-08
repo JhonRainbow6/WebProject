@@ -33,6 +33,10 @@ const Dashboard = () => {
         navigate('/profile');
     };
 
+    const handleLibraryClick = () => {
+        navigate('/library');
+    };
+
     if (loading) return <LoadingSpinner />;
     if (error) return <div>Error: {error}</div>;
     if (!user) return <div>No se encontró información del usuario</div>;
@@ -45,7 +49,7 @@ const Dashboard = () => {
                         <button className="sidebar-icon">
                             <i className="fas fa-th"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleLibraryClick}>
                             <i className="fas fa-gamepad"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleDealsClick}>

@@ -3,7 +3,40 @@
     min-height: 100vh;
     background-color: #121212;
     color: white;
+    position: relative;
+    overflow: hidden;
+}
 
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    background-color: #1e1e1e;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-icons {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+
+.icon-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.icon-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .profile-content {
@@ -19,8 +52,9 @@
 .user-profile-main {
     flex-grow: 1;
     padding: 2rem;
-    overflow-y: auto;
     margin-left: 60px;
+    overflow-y: auto;
+    height: 100vh;
 }
 
 .user-profile-main h3 {
