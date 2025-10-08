@@ -24,6 +24,16 @@ const UserProfile = () => {
     const { user } = useAuth();
     const { logout, changePassword, updateProfileImage } = useAuthActions();
 
+    const handleLinkSteam = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No se encontró el token de autenticación');
+            return;
+        }
+        // Redirect to the backend endpoint for Steam authentication with token
+        window.location.href = `http://localhost:5000/api/steam/auth/steam?token=${token}`;
+    };
+
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -220,6 +230,11 @@ const UserProfile = () => {
                             onClick={() => togglePlatform('playstation')}
                         />
                     </div>
+                    {user && !user.steamId && (
+                        <button onClick={handleLinkSteam} className="btn-submit" style={{ marginTop: '1rem' }}>
+                            Vincular con Steam
+                        </button>
+                    )}
                 </div>
             </main>
         </div>
