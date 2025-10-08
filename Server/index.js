@@ -13,6 +13,7 @@ const app = express();
 const authRoutes = require('./routes/auth');
 const dealsRoutes = require('./routes/deals');
 const newsRoutes = require('./routes/news');
+const steamRoutes = require('./routes/steam');
 
 // Conectar a la DB
 const dbConnectionString = process.env.DB_CONNECTION_STRING.replace('<db_password>', process.env.DB_PASSWORD);
@@ -29,6 +30,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Configu
 app.use('/api/auth', authRoutes);
 app.use('/api/deals', dealsRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/steam', steamRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));

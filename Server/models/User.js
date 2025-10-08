@@ -15,6 +15,10 @@ const UserSchema = new mongoose.Schema({
     profileImage: {
         type: String,
         default: null
+    },
+    steamId: {
+        type: String,
+        default: null
     }
 });
 

@@ -24,6 +24,25 @@ const UserProfile = () => {
     const { user } = useAuth();
     const { logout, changePassword, updateProfileImage } = useAuthActions();
 
+    // Efecto para mantener actualizado el estado de las plataformas
+    useEffect(() => {
+        if (user) {
+            setActivePlatforms(prev => ({
+                ...prev,
+                steam: !!user.steamId // Convierte steamId a booleano
+            }));
+        }
+    }, [user]);
+
+    const handleLinkSteam = () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setError('No se encontró el token de autenticación');
+            return;
+        }
+        window.location.href = `http://localhost:5000/api/steam/auth/steam?token=${token}`;
+    };
+
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -52,6 +71,12 @@ const UserProfile = () => {
     };
 
     const togglePlatform = (platform) => {
+        if (platform === 'steam') {
+            if (!user?.steamId) {
+                handleLinkSteam();
+            }
+            return;
+        }
         setActivePlatforms(prev => ({
             ...prev,
             [platform]: !prev[platform]
@@ -201,24 +226,46 @@ const UserProfile = () => {
                 <div className="platforms-box">
                     <h4>Plataformas</h4>
                     <div className="platforms-grid">
-                        <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/512px-Steam_icon_logo.svg.png"
-                            alt="Steam"
-                            className={`platform-icon ${activePlatforms.steam ? 'active' : ''}`}
-                            onClick={() => togglePlatform('steam')}
-                        />
-                        <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/512px-Xbox_one_logo.svg.png"
-                            alt="Xbox"
-                            className={`platform-icon ${activePlatforms.xbox ? 'active' : ''}`}
-                            onClick={() => togglePlatform('xbox')}
-                        />
-                        <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Playstation_logo_colour.svg/512px-Playstation_logo_colour.svg.png"
-                            alt="PlayStation"
-                            className={`platform-icon ${activePlatforms.playstation ? 'active' : ''}`}
-                            onClick={() => togglePlatform('playstation')}
-                        />
+                        <div className="platform-item">
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Steam_icon_logo.svg/512px-Steam_icon_logo.svg.png"
+                                alt="Steam"
+                                className={`platform-icon ${activePlatforms.steam ? 'active' : ''}`}
+                                style={{ cursor: 'default' }}
+                                title={activePlatforms.steam ? 'Cuenta de Steam vinculada' : 'Vincular cuenta de Steam'}
+                            />
+                            <button
+                                className={`platform-link-button ${activePlatforms.steam ? 'active' : ''}`}
+                                onClick={() => !activePlatforms.steam && handleLinkSteam()}
+                                style={{ cursor: activePlatforms.steam ? 'default' : 'pointer' }}
+                            >
+                                {activePlatforms.steam ? 'Vinculado' : 'Vincular Steam'}
+                            </button>
+                        </div>
+                        <div className="platform-item">
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/512px-Xbox_one_logo.svg.png"
+                                alt="Xbox"
+                                className="platform-icon"
+                                style={{ cursor: 'default' }}
+                                title="Vinculación de Xbox próximamente"
+                            />
+                            <button className="platform-link-button coming-soon" disabled>
+                                Vincular Xbox
+                            </button>
+                        </div>
+                        <div className="platform-item">
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Playstation_logo_colour.svg/512px-Playstation_logo_colour.svg.png"
+                                alt="PlayStation"
+                                className="platform-icon"
+                                style={{ cursor: 'default' }}
+                                title="Vinculación de PlayStation próximamente"
+                            />
+                            <button className="platform-link-button coming-soon" disabled>
+                                Vincular PlayStation
+                            </button>
+                        </div>
                     </div>
                 </div>
             </main>

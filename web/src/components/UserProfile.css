@@ -171,7 +171,7 @@
 .platform-icon {
     width: 60px;
     height: 60px;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
     cursor: pointer;
     filter: grayscale(100%);
     opacity: 0.6;
@@ -184,6 +184,56 @@
 
 .platform-icon:hover {
     transform: scale(1.1);
+}
+
+.platform-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.platform-link-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.platform-link-button:not(:disabled) {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.platform-link-button.active {
+    background-color: #007bff;
+    cursor: default;
+    opacity: 1;
+}
+
+.platform-link-button:not(.active):not(:disabled):hover {
+    background-color: #444;
+    opacity: 0.9;
+}
+
+.platform-link-button.coming-soon {
+    position: relative;
+}
+
+.platform-link-button.coming-soon::after {
+    content: 'Próximamente';
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: #666;
+    white-space: nowrap;
 }
 
 /* Media Queries para diferentes tamaños de pantalla */
