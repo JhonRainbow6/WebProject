@@ -3,6 +3,7 @@ import axios from 'axios';
 import './DealsOfDay.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuthActions } from '../hooks/useAuthActions';
+import LoadingSpinner from './LoadingSpinner';
 
 const DealsOfDay = () => {
     const [deals, setDeals] = useState([]);
@@ -55,7 +56,7 @@ const DealsOfDay = () => {
         };
     }, []);
 
-    if (loading) return <div>Cargando ofertas...</div>;
+    if (loading) return <LoadingSpinner />;
     if (error) return <div>{error}</div>;
 
     return (
@@ -99,9 +100,15 @@ const DealsOfDay = () => {
                                 <div className="deal-info">
                                     <h3>{deal.title}</h3>
                                     <div className="deal-prices">
-                                        <span className="normal-price">${deal.normalPrice}</span>
-                                        <span className="sale-price">${deal.salePrice}</span>
-                                        <span className="savings">-{Math.round(parseFloat(deal.savings))}%</span>
+                                        {parseFloat(deal.savings) > 0 ? (
+                                            <>
+                                                <span className="normal-price">${deal.normalPrice}</span>
+                                                <span className="sale-price">${deal.salePrice}</span>
+                                                <span className="savings">-{Math.round(parseFloat(deal.savings))}%</span>
+                                            </>
+                                        ) : (
+                                            <span className="sale-price">${deal.normalPrice}</span>
+                                        )}
                                     </div>
                                     <button
                                         className="buy-button"

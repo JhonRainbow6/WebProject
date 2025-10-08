@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthActions } from '../hooks/useAuthActions';
 import { useAuth } from '../context/AuthContext';
+import { useAuthActions } from '../hooks/useAuthActions';
+import LoadingSpinner from './LoadingSpinner';
 import './UserProfile.css';
 
 const UserProfile = () => {
@@ -17,6 +18,7 @@ const UserProfile = () => {
         xbox: false,
         playstation: false
     });
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -63,8 +65,10 @@ const UserProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         if (newPassword !== confirmPassword) {
             setError('Las nuevas contraseñas no coinciden.');
+            setIsLoading(false);
             return;
         }
         setError('');
@@ -86,8 +90,12 @@ const UserProfile = () => {
         } catch (err) {
             // Mostrar el mensaje de error del servidor
             setError(err.message || 'Ocurrió un error al cambiar la contraseña.');
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    if (isLoading) return <LoadingSpinner />;
 
     return (
         <div className="dashboard-container">

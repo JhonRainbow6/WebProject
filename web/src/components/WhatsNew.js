@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthActions } from '../hooks/useAuthActions';
+import LoadingSpinner from './LoadingSpinner';
 import './WhatsNew.css';
 
 // Definición de tipo implícita para ayudar con las advertencias
@@ -77,7 +78,7 @@ const WhatsNew = () => {
         navigate('/profile');
     };
 
-    if (loading) return <div className="loading-container">Cargando noticias de Ubisoft...</div>;
+    if (loading) return <LoadingSpinner />;
     if (error) return <div className="error-container">Error: {error}</div>;
 
     return (

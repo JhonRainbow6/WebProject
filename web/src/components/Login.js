@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAuthActions } from '../hooks/useAuthActions';
+import LoadingSpinner from './LoadingSpinner';
 import './Login.css';
 
 const Login = () => {
@@ -28,6 +29,8 @@ const Login = () => {
         // Implementar inicio de sesión con Google
         console.log('Inicio de sesión con Google');
     };
+
+    if (loading) return <LoadingSpinner />;
 
     return (
         <div className="login-container">

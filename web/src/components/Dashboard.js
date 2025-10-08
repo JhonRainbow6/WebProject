@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAuthActions } from '../hooks/useAuthActions';
+import LoadingSpinner from './LoadingSpinner';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -32,7 +33,7 @@ const Dashboard = () => {
         navigate('/profile');
     };
 
-    if (loading) return <div>Cargando...</div>;
+    if (loading) return <LoadingSpinner />;
     if (error) return <div>Error: {error}</div>;
     if (!user) return <div>No se encontró información del usuario</div>;
 
