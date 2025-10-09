@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAuthActions } from '../hooks/useAuthActions';
@@ -10,6 +10,11 @@ const Dashboard = () => {
     const { logout, fetchUserData } = useAuthActions();
     const navigate = useNavigate();
     const location = useLocation();
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
+    };
 
     useEffect(() => {
         const loadUserData = async () => {
@@ -32,7 +37,10 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-container">
-            <aside className="sidebar">
+            <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                <button className="toggle-sidebar" onClick={toggleSidebar}>
+                    <i className="fas fa-chevron-left"></i>
+                </button>
                 <div className="sidebar-icons">
                     <div className="icon-group">
                         <button className={`sidebar-icon ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => handleNavigation('/dashboard')}>
@@ -87,7 +95,7 @@ const Dashboard = () => {
                         <p>Ultimas novedades y actualizaciones relacionadas con Ubisoft.</p>
                     </div>
                     <div className="grid-item library" onClick={() => handleNavigation('/library')} style={{ cursor: 'pointer' }}>
-                        <h3>Library</h3>
+                        <h3>CrossLibrary</h3>
                         <p>Accede a tu biblioteca de juegos en plataformas conectadas</p>
                     </div>
                     <div className="grid-item deals" onClick={() => handleNavigation('/deals')} style={{ cursor: 'pointer' }}>
