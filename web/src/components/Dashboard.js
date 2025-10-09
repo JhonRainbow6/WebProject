@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
@@ -9,6 +9,7 @@ const Dashboard = () => {
     const { user, loading, error } = useAuth();
     const { logout, fetchUserData } = useAuthActions();
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const loadUserData = async () => {
@@ -21,24 +22,8 @@ const Dashboard = () => {
         loadUserData().catch(console.error);
     }, [fetchUserData]);
 
-    const handleDealsClick = () => {
-        navigate('/deals');
-    };
-
-    const handleWhatsNewClick = () => {
-        navigate('/whats-new');
-    };
-
-    const handleProfileClick = () => {
-        navigate('/profile');
-    };
-
-    const handleLibraryClick = () => {
-        navigate('/library');
-    };
-
-    const handleFriendsClick = () => {
-        navigate('/friends');
+    const handleNavigation = (path) => {
+        navigate(path);
     };
 
     if (loading) return <LoadingSpinner />;
@@ -50,24 +35,24 @@ const Dashboard = () => {
             <aside className="sidebar">
                 <div className="sidebar-icons">
                     <div className="icon-group">
-                        <button className="sidebar-icon active">
+                        <button className={`sidebar-icon ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={() => handleNavigation('/dashboard')}>
                             <i className="fas fa-th"></i>
                         </button>
-                        <button className="sidebar-icon" onClick={handleLibraryClick}>
+                        <button className={`sidebar-icon ${location.pathname === '/library' ? 'active' : ''}`} onClick={() => handleNavigation('/library')}>
                             <i className="fas fa-gamepad"></i>
                         </button>
-                        <button className="sidebar-icon" onClick={handleDealsClick}>
+                        <button className={`sidebar-icon ${location.pathname === '/deals' ? 'active' : ''}`} onClick={() => handleNavigation('/deals')}>
                             <i className="fas fa-shopping-cart"></i>
                         </button>
-                        <button className="sidebar-icon" onClick={handleFriendsClick}>
+                        <button className={`sidebar-icon ${location.pathname === '/friends' ? 'active' : ''}`} onClick={() => handleNavigation('/friends')}>
                             <i className="fas fa-users"></i>
                         </button>
-                        <button className="sidebar-icon" onClick={handleWhatsNewClick}>
+                        <button className={`sidebar-icon ${location.pathname === '/whats-new' ? 'active' : ''}`} onClick={() => handleNavigation('/whats-new')}>
                             <i className="fas fa-newspaper"></i>
                         </button>
                     </div>
                     <div className="icon-bottom">
-                        <button className="sidebar-icon" onClick={handleProfileClick}>
+                        <button className={`sidebar-icon ${location.pathname === '/profile' ? 'active' : ''}`} onClick={() => handleNavigation('/profile')}>
                             <i className="fas fa-user"></i>
                         </button>
                         <button className="sidebar-icon" onClick={logout}>
@@ -78,7 +63,7 @@ const Dashboard = () => {
             </aside>
             <main className="dashboard-main">
                 <div className="dashboard-grid">
-                    <div className="grid-item about-you" onClick={handleProfileClick} style={{ cursor: 'pointer' }}>
+                    <div className="grid-item about-you" onClick={() => handleNavigation('/profile')} style={{ cursor: 'pointer' }}>
                         <h3>About You</h3>
                         <div className="user-info">
                             <div className="dashboard-profile-image">
@@ -93,19 +78,19 @@ const Dashboard = () => {
                             <p>Bienvenido, {user.email}</p>
                         </div>
                     </div>
-                    <div className="grid-item friends" onClick={handleFriendsClick} style={{ cursor: 'pointer' }}>
+                    <div className="grid-item friends" onClick={() => handleNavigation('/friends')} style={{ cursor: 'pointer' }}>
                         <h3>Friends</h3>
                         <p>Gestiona y conecta con tus amigos en todas las plataformas</p>
                     </div>
-                    <div className="grid-item whats-new" onClick={handleWhatsNewClick} style={{ cursor: 'pointer' }}>
+                    <div className="grid-item whats-new" onClick={() => handleNavigation('/whats-new')} style={{ cursor: 'pointer' }}>
                         <h3>What's New?</h3>
                         <p>Ultimas novedades y actualizaciones relacionadas con Ubisoft.</p>
                     </div>
-                    <div className="grid-item library" onClick={handleLibraryClick} style={{ cursor: 'pointer' }}>
+                    <div className="grid-item library" onClick={() => handleNavigation('/library')} style={{ cursor: 'pointer' }}>
                         <h3>Library</h3>
                         <p>Accede a tu biblioteca de juegos en plataformas conectadas</p>
                     </div>
-                    <div className="grid-item deals" onClick={handleDealsClick} style={{ cursor: 'pointer' }}>
+                    <div className="grid-item deals" onClick={() => handleNavigation('/deals')} style={{ cursor: 'pointer' }}>
                         <h3>Deals of the Day</h3>
                         <p>¡Descubre las ofertas especiales de UPlay el dia de hoy!</p>
                     </div>

@@ -176,7 +176,7 @@ const Library = () => {
             </aside>
             <main className="library-main">
                 <div className="library-header">
-                    <h2>Tu Biblioteca</h2>
+                    <h2>CrossLibrary</h2>
                     {error && <p className="error-message">{error}</p>}
                 </div>
                 {games.length === 0 ? (

@@ -91,21 +91,40 @@ router.get('/games', authMiddleware, async (req, res) => {
         // Transformar los juegos y obtener logros para cada uno
         const games = await Promise.all(gamesResponse.data.response.games.map(async game => {
             let achievements = { total: 0, completed: 0 };
+            let gameSchema = null;
 
             try {
+                // Obtener el esquema del juego para saber el número total de logros
+                const schemaResponse = await axios.get(
+                    `http://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${steamApiKey}&appid=${game.appid}`
+                );
+                if (schemaResponse.data.game && schemaResponse.data.game.availableGameStats && schemaResponse.data.game.availableGameStats.achievements) {
+                    gameSchema = schemaResponse.data.game.availableGameStats.achievements;
+                    achievements.total = gameSchema.length;
+                }
+            } catch (error) {
+                // No todos los juegos tienen un esquema de logros público
+                console.log(`No se pudo obtener el esquema de logros para ${game.name}`);
+            }
+
+            try {
+                // Obtener los logros del jugador
                 const achievementStats = await axios.get(
                     `http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${game.appid}&key=${steamApiKey}&steamid=${user.steamId}`
                 );
 
-                if (achievementStats.data.playerstats && achievementStats.data.playerstats.achievements) {
-                    achievements = {
-                        total: achievementStats.data.playerstats.achievements.length,
-                        completed: achievementStats.data.playerstats.achievements.filter(a => a.achieved === 1).length
-                    };
+                if (achievementStats.data.playerstats && achievementStats.data.playerstats.success && achievementStats.data.playerstats.achievements) {
+                    achievements.completed = achievementStats.data.playerstats.achievements.filter(a => a.achieved === 1).length;
+                    // Si no obtuvimos el total del esquema, lo tomamos de los logros del jugador
+                    if (achievements.total === 0) {
+                        achievements.total = achievementStats.data.playerstats.achievements.length;
+                    }
                 }
+                // Si success es false o no hay logros, no hacemos nada y completed se queda en 0.
             } catch (error) {
-                // Algunos juegos pueden no tener logros, ignoramos el error
-                console.log(`No se pudieron obtener logros para ${game.name}`);
+                // Si la API da un error (ej. perfil privado para este juego), lo registramos pero continuamos.
+                // 'completed' se mantendrá en 0.
+                console.log(`No se pudieron obtener los logros del jugador para ${game.name} (posiblemente perfil privado o no jugado)`);
             }
 
             return {

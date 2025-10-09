@@ -1,7 +1,7 @@
 .library-container {
     display: flex;
     min-height: 100vh;
-    background-color: #121212;
+    background: linear-gradient(135deg, #0a0a1e 0%, #1a1a2e 100%);
     color: white;
     position: relative;
     overflow: hidden;
