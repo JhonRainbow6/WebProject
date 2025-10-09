@@ -12,6 +12,9 @@ const DealsOfDay = () => {
     const navigate = useNavigate();
     const { logout } = useAuthActions();
 
+    const handleLibraryClick = () => {
+        navigate('/library');
+    }
     const handleDealsClick = () => {
         navigate('/deals');
     };
@@ -67,8 +70,8 @@ const DealsOfDay = () => {
                         <button className="sidebar-icon" onClick={() => navigate('/dashboard')}>
                             <i className="fas fa-th"></i>
                         </button>
-                        <button className="sidebar-icon">
-                            <i className="fas fa-gamepad"></i>
+                        <button className="sidebar-icon" onClick={handleLibraryClick} >
+                            <i className="fas fa-gamepad"> </i>
                         </button>
                         <button className="sidebar-icon" onClick={handleDealsClick}>
                             <i className="fas fa-shopping-cart"></i>

@@ -91,13 +91,15 @@ const Dashboard = () => {
                     </div>
                     <div className="grid-item friends">
                         <h3>Friends</h3>
+                        <p>Gestiona y conecta con tus amigos en todas las platafromas</p>
                     </div>
                     <div className="grid-item whats-new" onClick={handleWhatsNewClick} style={{ cursor: 'pointer' }}>
                         <h3>What's New?</h3>
                         <p>Ultimas novedades y actualizaciones relacionadas con Ubisoft.</p>
                     </div>
-                    <div className="grid-item library">
+                    <div className="grid-item library" onClick={handleLibraryClick} style={{ cursor: 'pointer' }}>
                         <h3>Library</h3>
+                        <p>Accede a tu biblioteca de juegos en plataformas conectadas</p>
                     </div>
                     <div className="grid-item deals" onClick={handleDealsClick} style={{ cursor: 'pointer' }}>
                         <h3>Deals of the Day</h3>

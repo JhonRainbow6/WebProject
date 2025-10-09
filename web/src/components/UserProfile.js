@@ -87,7 +87,7 @@ const UserProfile = () => {
     const handleWhatsNewClick = () => navigate('/whats-new');
     const handleProfileClick = () => navigate('/profile');
     const handleDashboardClick = () => navigate('/dashboard');
-
+    const handleLibraryClick = () => navigate('/library');
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -130,7 +130,7 @@ const UserProfile = () => {
                         <button className="sidebar-icon" onClick={handleDashboardClick}>
                             <i className="fas fa-th"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleLibraryClick}>
                             <i className="fas fa-gamepad"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleDealsClick}>
