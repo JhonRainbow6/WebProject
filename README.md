@@ -1,7 +1,7 @@
 ## Project Structure
 
 A continuación se detalla la estructura de directorios y archivos del proyecto.
-
+```
 WebProject/
 ├── Server/                   # Backend (Node.js/Express)
 │   ├── config/               # Archivos de configuración
@@ -42,3 +42,4 @@ WebProject/
 ├── index.js                  # Posible punto de entrada raíz (si aplica)
 ├── package.json              # Dependencias y scripts del proyecto raíz
 └── README.md                 # Documentación principal del proyecto
+```
