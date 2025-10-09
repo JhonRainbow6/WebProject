@@ -63,13 +63,13 @@ const Library = () => {
                             <button className="sidebar-icon" onClick={handleDashboardClick}>
                                 <i className="fas fa-th"></i>
                             </button>
-                            <button className="sidebar-icon">
+                            <button className="sidebar-icon active">
                                 <i className="fas fa-gamepad"></i>
                             </button>
                             <button className="sidebar-icon" onClick={handleDealsClick}>
                                 <i className="fas fa-shopping-cart"></i>
                             </button>
-                            <button className="sidebar-icon">
+                            <button className="sidebar-icon" onClick={() => navigate('/friends')}>
                                 <i className="fas fa-users"></i>
                             </button>
                             <button className="sidebar-icon" onClick={handleWhatsNewClick}>
@@ -104,13 +104,13 @@ const Library = () => {
                             <button className="sidebar-icon" onClick={handleDashboardClick}>
                                 <i className="fas fa-th"></i>
                             </button>
-                            <button className="sidebar-icon">
+                            <button className="sidebar-icon active">
                                 <i className="fas fa-gamepad"></i>
                             </button>
                             <button className="sidebar-icon" onClick={handleDealsClick}>
                                 <i className="fas fa-shopping-cart"></i>
                             </button>
-                            <button className="sidebar-icon">
+                            <button className="sidebar-icon" onClick={() => navigate('/friends')}>
                                 <i className="fas fa-users"></i>
                             </button>
                             <button className="sidebar-icon" onClick={handleWhatsNewClick}>
@@ -151,13 +151,13 @@ const Library = () => {
                         <button className="sidebar-icon" onClick={handleDashboardClick}>
                             <i className="fas fa-th"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon active">
                             <i className="fas fa-gamepad"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleDealsClick}>
                             <i className="fas fa-shopping-cart"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={() => navigate('/friends')}>
                             <i className="fas fa-users"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleWhatsNewClick}>

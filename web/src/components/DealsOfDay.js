@@ -73,10 +73,10 @@ const DealsOfDay = () => {
                         <button className="sidebar-icon" onClick={handleLibraryClick} >
                             <i className="fas fa-gamepad"> </i>
                         </button>
-                        <button className="sidebar-icon" onClick={handleDealsClick}>
+                        <button className="sidebar-icon active" onClick={handleDealsClick}>
                             <i className="fas fa-shopping-cart"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={() => navigate('/friends')}>
                             <i className="fas fa-users"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleWhatsNewClick}>
