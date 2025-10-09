@@ -71,4 +71,128 @@ router.get('/auth/steam/callback', authMiddleware, async (req, res) => {
     }
 });
 
+// Ruta para obtener los juegos del usuario
+router.get('/games', authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user || !user.steamId) {
+            return res.status(400).json({ error: 'Usuario no tiene una cuenta de Steam vinculada' });
+        }
+
+        const steamApiKey = process.env.STEAM_API_KEY;
+        const gamesResponse = await axios.get(
+            `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamApiKey}&steamid=${user.steamId}&format=json&include_appinfo=true&include_played_free_games=true`
+        );
+
+        if (!gamesResponse.data.response || !gamesResponse.data.response.games) {
+            return res.json({ games: [] });
+        }
+
+        // Transformar los juegos y obtener logros para cada uno
+        const games = await Promise.all(gamesResponse.data.response.games.map(async game => {
+            let achievements = { total: 0, completed: 0 };
+
+            try {
+                const achievementStats = await axios.get(
+                    `http://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid=${game.appid}&key=${steamApiKey}&steamid=${user.steamId}`
+                );
+
+                if (achievementStats.data.playerstats && achievementStats.data.playerstats.achievements) {
+                    achievements = {
+                        total: achievementStats.data.playerstats.achievements.length,
+                        completed: achievementStats.data.playerstats.achievements.filter(a => a.achieved === 1).length
+                    };
+                }
+            } catch (error) {
+                // Algunos juegos pueden no tener logros, ignoramos el error
+                console.log(`No se pudieron obtener logros para ${game.name}`);
+            }
+
+            return {
+                appid: game.appid,
+                name: game.name,
+                playtime_forever: game.playtime_forever,
+                // Usar una imagen de mejor calidad
+                img_icon_url: game.img_icon_url,
+                img_header: `https://cdn.cloudflare.steamstatic.com/steam/apps/${game.appid}/header.jpg`,
+                achievements
+            };
+        }));
+
+        // Ordenar alfabéticamente
+        games.sort((a, b) => a.name.localeCompare(b.name));
+
+        res.json({ games });
+    } catch (error) {
+        console.error('Error al obtener juegos de Steam:', error);
+        res.status(500).json({ error: 'Error al obtener los juegos de Steam' });
+    }
+});
+
+// Ruta para obtener los amigos del usuario
+router.get('/friends', authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user || !user.steamId) {
+            return res.status(400).json({ error: 'Usuario no tiene una cuenta de Steam vinculada' });
+        }
+
+        const steamApiKey = process.env.STEAM_API_KEY;
+
+        if (!steamApiKey) {
+            console.error('STEAM_API_KEY no está configurada en las variables de entorno');
+            return res.status(500).json({ error: 'Error de configuración del servidor' });
+        }
+
+        try {
+            const friendsResponse = await axios.get(
+                `http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=${steamApiKey}&steamid=${user.steamId}&relationship=friend`
+            );
+
+            // Si no hay lista de amigos o la estructura es diferente, devolver array vacío
+            if (!friendsResponse.data || !friendsResponse.data.friendslist || !friendsResponse.data.friendslist.friends) {
+                console.log('No se encontró lista de amigos o formato inesperado en la respuesta:', friendsResponse.data);
+                return res.json({ friends: [] });
+            }
+
+            // Obtener detalles de cada amigo para conseguir sus nombres y avatares
+            const friendIds = friendsResponse.data.friendslist.friends.map(friend => friend.steamid);
+
+            if (friendIds.length === 0) {
+                return res.json({ friends: [] });
+            }
+
+            const friendsDetailsResponse = await axios.get(
+                `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${steamApiKey}&steamids=${friendIds.join(',')}`
+            );
+
+            if (!friendsDetailsResponse.data.response || !friendsDetailsResponse.data.response.players) {
+                console.log('Formato inesperado en detalles de jugadores:', friendsDetailsResponse.data);
+                return res.json({ friends: [] });
+            }
+
+            const friends = friendsDetailsResponse.data.response.players.map(player => ({
+                steamId: player.steamid,
+                name: player.personaname || 'Usuario de Steam',
+                avatar: player.avatarmedium || '',
+                status: typeof player.personastate !== 'undefined' ? player.personastate : 0,
+                lastOnline: player.lastlogoff || null,
+                profileUrl: player.profileurl || `https://steamcommunity.com/profiles/${player.steamid}`
+            }));
+
+            res.json({ friends });
+        } catch (steamApiError) {
+            console.error('Error en la API de Steam:', steamApiError.message);
+            // Si es un error específico de la API de Steam (cuenta privada, etc)
+            if (steamApiError.response && steamApiError.response.status === 401) {
+                return res.status(403).json({ error: 'La lista de amigos del perfil de Steam es privada' });
+            }
+            return res.status(502).json({ error: 'Error al comunicarse con la API de Steam' });
+        }
+    } catch (error) {
+        console.error('Error al obtener amigos de Steam:', error);
+        res.status(500).json({ error: 'Error al obtener la lista de amigos' });
+    }
+});
+
 module.exports = router;

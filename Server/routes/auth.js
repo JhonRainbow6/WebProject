@@ -49,7 +49,7 @@ const loginSchema = Joi.object({
 // Middleware para verificar el token
 const verifyToken = (req, res, next) => {
     try {
-        const token = req.header('auth-token');
+        const token = req.header('x-auth-token');
         console.log('Token recibido:', token); // Log para depuración
 
         if (!token) {

@@ -1,0 +1,204 @@
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a0a1e 0%, #1a1a2e 100%);
+    color: white;
+}
+
+/* Estilos para la barra lateral - mantienen consistencia con Dashboard */
+.sidebar {
+    width: 80px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-icons {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.icon-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-icon:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.sidebar-icon.active {
+    background: rgba(102, 192, 244, 0.3);
+    box-shadow: 0 0 15px rgba(102, 192, 244, 0.5);
+}
+
+/* Estilos específicos para la sección de amigos */
+.friends-main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.friends-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(42, 71, 94, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.friends-content h2 {
+    color: #66c0f4;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #2a475e;
+    padding-bottom: 10px;
+}
+
+.friends-error {
+    color: #ff4c4c;
+    margin-bottom: 15px;
+}
+
+.friends-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 20px;
+}
+
+.friend-card {
+    background-color: rgba(27, 40, 56, 0.8);
+    border-radius: 5px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.friend-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.friend-avatar {
+    position: relative;
+    margin-right: 15px;
+}
+
+.friend-avatar img {
+    width: 64px;
+    height: 64px;
+    border-radius: 5px;
+    border: 2px solid #66c0f4;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #1b2838;
+}
+
+.status-0 { background-color: #9b9b9b; } /* Desconectado */
+.status-1 { background-color: #57cbde; } /* En línea */
+.status-2 { background-color: #e95b4f; } /* Ocupado */
+.status-3 { background-color: #f1c40f; } /* Ausente */
+.status-4 { background-color: #9b59b6; } /* Durmiendo */
+.status-5 { background-color: #3498db; } /* Buscando intercambio */
+.status-6 { background-color: #2ecc71; } /* Buscando jugar */
+
+.friend-details {
+    flex-grow: 1;
+}
+
+.friend-details h3 {
+    margin: 0 0 5px 0;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+.friend-status {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: #c6d4df;
+}
+
+.last-online {
+    margin: 0;
+    font-size: 12px;
+    color: #9b9b9b;
+}
+
+.friend-actions {
+    margin-left: 10px;
+}
+
+.view-profile-button {
+    background-color: #66c0f4;
+    color: #1b2838;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.view-profile-button:hover {
+    background-color: #57cbde;
+}
+
+/* Estilos para el estado de no tener Steam vinculado */
+.no-steam {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.link-steam-button, .retry-button {
+    background-color: #66c0f4;
+    color: #1b2838;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.link-steam-button:hover, .retry-button:hover {
+    background-color: #57cbde;
+    transform: translateY(-2px);
+}

@@ -87,7 +87,7 @@ const UserProfile = () => {
     const handleWhatsNewClick = () => navigate('/whats-new');
     const handleProfileClick = () => navigate('/profile');
     const handleDashboardClick = () => navigate('/dashboard');
-
+    const handleLibraryClick = () => navigate('/library');
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -130,13 +130,13 @@ const UserProfile = () => {
                         <button className="sidebar-icon" onClick={handleDashboardClick}>
                             <i className="fas fa-th"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleLibraryClick}>
                             <i className="fas fa-gamepad"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleDealsClick}>
                             <i className="fas fa-shopping-cart"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={() => navigate('/friends')}>
                             <i className="fas fa-users"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleWhatsNewClick}>
@@ -144,7 +144,7 @@ const UserProfile = () => {
                         </button>
                     </div>
                     <div className="icon-bottom">
-                        <button className="sidebar-icon" onClick={handleProfileClick}>
+                        <button className="sidebar-icon active" onClick={handleProfileClick}>
                             <i className="fas fa-user"></i>
                         </button>
                         <button className="sidebar-icon" onClick={logout}>

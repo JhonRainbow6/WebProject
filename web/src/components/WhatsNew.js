@@ -69,7 +69,10 @@ const WhatsNew = () => {
     const handleDashboardClick = () => {
         navigate('/dashboard');
     };
-    
+
+    const handleLibraryClick = () => {
+        navigate('/library');
+    }
     const handleDealsClick = () => {
         navigate('/deals');
     };
@@ -89,16 +92,16 @@ const WhatsNew = () => {
                         <button className="sidebar-icon" onClick={handleDashboardClick}>
                             <i className="fas fa-th"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleLibraryClick}>
                             <i className="fas fa-gamepad"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleDealsClick}>
                             <i className="fas fa-shopping-cart"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={() => navigate('/friends')}>
                             <i className="fas fa-users"></i>
                         </button>
-                        <button className="sidebar-icon" >
+                        <button className="sidebar-icon active">
                             <i className="fas fa-newspaper"></i>
                         </button>
                     </div>

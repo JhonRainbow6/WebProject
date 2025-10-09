@@ -33,6 +33,14 @@ const Dashboard = () => {
         navigate('/profile');
     };
 
+    const handleLibraryClick = () => {
+        navigate('/library');
+    };
+
+    const handleFriendsClick = () => {
+        navigate('/friends');
+    };
+
     if (loading) return <LoadingSpinner />;
     if (error) return <div>Error: {error}</div>;
     if (!user) return <div>No se encontró información del usuario</div>;
@@ -42,16 +50,16 @@ const Dashboard = () => {
             <aside className="sidebar">
                 <div className="sidebar-icons">
                     <div className="icon-group">
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon active">
                             <i className="fas fa-th"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleLibraryClick}>
                             <i className="fas fa-gamepad"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleDealsClick}>
                             <i className="fas fa-shopping-cart"></i>
                         </button>
-                        <button className="sidebar-icon">
+                        <button className="sidebar-icon" onClick={handleFriendsClick}>
                             <i className="fas fa-users"></i>
                         </button>
                         <button className="sidebar-icon" onClick={handleWhatsNewClick}>
@@ -85,15 +93,17 @@ const Dashboard = () => {
                             <p>Bienvenido, {user.email}</p>
                         </div>
                     </div>
-                    <div className="grid-item friends">
+                    <div className="grid-item friends" onClick={handleFriendsClick} style={{ cursor: 'pointer' }}>
                         <h3>Friends</h3>
+                        <p>Gestiona y conecta con tus amigos en todas las plataformas</p>
                     </div>
                     <div className="grid-item whats-new" onClick={handleWhatsNewClick} style={{ cursor: 'pointer' }}>
                         <h3>What's New?</h3>
                         <p>Ultimas novedades y actualizaciones relacionadas con Ubisoft.</p>
                     </div>
-                    <div className="grid-item library">
+                    <div className="grid-item library" onClick={handleLibraryClick} style={{ cursor: 'pointer' }}>
                         <h3>Library</h3>
+                        <p>Accede a tu biblioteca de juegos en plataformas conectadas</p>
                     </div>
                     <div className="grid-item deals" onClick={handleDealsClick} style={{ cursor: 'pointer' }}>
                         <h3>Deals of the Day</h3>

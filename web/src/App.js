@@ -9,6 +9,8 @@ import DealsOfDay from './components/DealsOfDay';
 import WhatsNew from './components/WhatsNew';
 import PrivateRoute from './components/PrivateRoute';
 import UserProfile from './components/UserProfile';
+import Library from './components/Library';
+import Friends from './components/Friends';
 
 function App() {
     return (
@@ -37,6 +39,16 @@ function App() {
                         <Route path="/profile" element={
                             <PrivateRoute>
                                 <UserProfile />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/library" element={
+                            <PrivateRoute>
+                                <Library />
+                            </PrivateRoute>
+                        } />
+                        <Route path="/friends" element={
+                            <PrivateRoute>
+                                <Friends />
                             </PrivateRoute>
                         } />
                     </Routes>
