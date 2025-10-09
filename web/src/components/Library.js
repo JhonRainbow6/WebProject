@@ -210,6 +210,7 @@ const Library = () => {
                                         )}
                                     </div>
                                 </div>
+                                <div className="platform-watermark steam"></div>
                             </div>
                         ))}
                     </div>
