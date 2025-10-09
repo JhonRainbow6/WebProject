@@ -80,16 +80,9 @@ router.get('/games', authMiddleware, async (req, res) => {
         }
 
         const steamApiKey = process.env.STEAM_API_KEY;
-        const [gamesResponse, achievementsResponse] = await Promise.all([
-            // Obtener lista de juegos
-            axios.get(
-                `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamApiKey}&steamid=${user.steamId}&format=json&include_appinfo=true&include_played_free_games=true`
-            ),
-            // Obtener estadísticas y logros de todos los juegos
-            axios.get(
-                `http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${steamApiKey}&steamid=${user.steamId}&format=json`
-            )
-        ]);
+        const gamesResponse = await axios.get(
+            `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${steamApiKey}&steamid=${user.steamId}&format=json&include_appinfo=true&include_played_free_games=true`
+        );
 
         if (!gamesResponse.data.response || !gamesResponse.data.response.games) {
             return res.json({ games: [] });

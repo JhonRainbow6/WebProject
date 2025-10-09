@@ -53,7 +53,8 @@ export const useAuthActions = () => {
         try {
             const res = await axios.get('http://localhost:5000/api/auth/user', {
                 headers: {
-                    'auth-token': token
+                    'x-auth-token': token,
+                    'Content-Type': 'application/json'
                 }
             });
 
@@ -81,7 +82,8 @@ export const useAuthActions = () => {
                 newPassword
             }, {
                 headers: {
-                    'auth-token': token
+                    'x-auth-token': token,
+                    'Content-Type': 'application/json'
                 }
             });
             return res.data;
@@ -105,7 +107,7 @@ export const useAuthActions = () => {
                 formData,
                 {
                     headers: {
-                        'auth-token': token,
+                        'x-auth-token': token,
                         'Content-Type': 'multipart/form-data'
                     }
                 }

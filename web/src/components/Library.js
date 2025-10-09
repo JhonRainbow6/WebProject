@@ -23,6 +23,7 @@ const Library = () => {
                 const token = localStorage.getItem('token');
                 const response = await axios.get(`http://localhost:5000/api/steam/games`, {
                     headers: {
+                        'Content-Type': 'application/json',
                         'x-auth-token': token
                     }
                 });
@@ -35,7 +36,11 @@ const Library = () => {
             }
         };
 
-        fetchGames();
+        fetchGames().catch(err => {
+            console.error('Error al ejecutar fetchGames:', err);
+            setError('Ha ocurrido un error inesperado');
+            setLoading(false);
+        });
     }, [user]);
 
     const handleDealsClick = () => navigate('/deals');
@@ -124,13 +129,13 @@ const Library = () => {
                 </aside>
                 <main className="library-main">
                     <div className="no-steam-linked">
-                        <h2>Cuentas no vinculadas</h2>
-                        <p>Para ver tu biblioteca de juegos, necesitas vincular tu de Steam, Xbox o PlayStation.</p>
+                        <h2>Cuenta de Steam no vinculada</h2>
+                        <p>Para ver tu biblioteca de juegos, necesitas vincular tu cuenta de Steam.</p>
                         <button
                             className="link-steam-button"
                             onClick={() => navigate('/profile')}
                         >
-                            Ir a vincular Cuentas
+                            Ir a vincular Steam
                         </button>
                     </div>
                 </main>
@@ -171,7 +176,7 @@ const Library = () => {
             </aside>
             <main className="library-main">
                 <div className="library-header">
-                    <h2>Library</h2>
+                    <h2>Tu Biblioteca</h2>
                     {error && <p className="error-message">{error}</p>}
                 </div>
                 {games.length === 0 ? (
