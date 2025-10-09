@@ -43,7 +43,7 @@ const Register = () => {
             <div className="login-card">
                 <div className="login-header">
                     <p>Create Account in</p>
-                    <h1>CAP for Games</h1>
+                    <h1>C.A.P for Games</h1>
                 </div>
 
                 <form onSubmit={handleSubmit} className="login-form">
