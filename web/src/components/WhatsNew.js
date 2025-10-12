@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
 import './WhatsNew.css';
+import useFetch from '../hooks/useFetch';
 
-// Definición de tipo implícita para ayudar con las advertencias
 /**
  * @typedef {Object} Article
  * @property {string} title - Título del artículo
@@ -18,52 +18,20 @@ import './WhatsNew.css';
  */
 
 const WhatsNew = () => {
-    /** @type {[Article[], React.Dispatch<React.SetStateAction<Article[]>>]} */
-    const [news, setNews] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { data: newsData, loading, error } = useFetch('http://localhost:5000/api/news/gaming');
     const navigate = useNavigate();
     const { logout } = useAuthActions();
 
     // Lista de fuentes a excluir
     const excludedSources = ["Generación Xbox"];
 
-    useEffect(() => {
-        // Función inmediatamente invocada para poder usar async/await dentro de useEffect
-        (async () => {
-            try {
-                // Llamamos a nuestro propio endpoint que ahora filtra solo noticias de Ubisoft
-                const response = await fetch('http://localhost:5000/api/news/gaming');
-
-                if (!response.ok) {
-                    setError('No se pudieron cargar las noticias de Ubisoft');
-                    return;
-                }
-
-                const data = await response.json();
-
-                // Verificamos que tengamos artículos para mostrar y que tengan la estructura esperada
-                if (data && data.articles && Array.isArray(data.articles) && data.articles.length > 0) {
-                    // Filtracion de fuentes excluidas y artículos con datos incompletos
-                    const filteredArticles = data.articles.filter(article =>
-                        article &&
-                        article.source &&
-                        article.source.name &&
-                        !excludedSources.includes(article.source.name)
-                    );
-
-                    setNews(filteredArticles);
-                } else {
-                    setError('No se encontraron artículos de Ubisoft');
-                }
-            } catch (err) {
-                setError(err.message || 'Error al cargar las noticias');
-                console.error('Error al obtener noticias de Ubisoft:', err);
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, []);
+    // Filtracion de fuentes excluidas y artículos con datos incompletos
+    const news = newsData?.articles?.filter(article =>
+        article &&
+        article.source &&
+        article.source.name &&
+        !excludedSources.includes(article.source.name)
+    ) || [];
 
     // Funciones de navegación
     const handleDashboardClick = () => {
@@ -127,13 +95,12 @@ const WhatsNew = () => {
                             <div className="news-card" key={index} onClick={() => window.open(article.url, '_blank')}>
                                 {article && article.urlToImage && (
                                     <div className="news-image">
-                                        <img src={article.urlToImage} alt={article.title || 'Noticia de Ubisoft'} />
+                                        <img src={article.urlToImage} alt={(article && article.title) || 'Noticia de Ubisoft'} />
                                     </div>
                                 )}
                                 <div className="news-content">
-                                    <h3>{article && article.title || 'Noticia de Ubisoft'}</h3>
+                                    <h3>{(article && article.title) || 'Noticia de Ubisoft'}</h3>
                                     <div className="news-meta">
-                                        <span>Fuente: {article && article.source && article.source.name || 'Desconocida'}</span>
                                         <span>Fecha: {article && article.publishedAt ?
                                             new Date(article.publishedAt).toLocaleDateString('es-ES') :
                                             'Fecha desconocida'}</span>
@@ -156,7 +123,7 @@ const WhatsNew = () => {
 
                     {news.length === 0 && !loading && !error && (
                         <div className="no-news-message">
-                            <p>No hay noticias recientes de Ubisoft disponibles en este momento.</p>
+                            <p></p>
                         </div>
                     )}
                 </div>

@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import './DealsOfDay.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
+import useFetch from '../hooks/useFetch';
 
 const DealsOfDay = () => {
-    const [deals, setDeals] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { data: deals, loading, error } = useFetch('http://localhost:5000/api/deals/ubisoft');
     const navigate = useNavigate();
     const { logout } = useAuthActions();
 
@@ -25,39 +23,6 @@ const DealsOfDay = () => {
     const handleProfileClick = () => {
         navigate('/profile');
     };
-    useEffect(() => {
-        let isMounted = true;
-
-        const fetchDeals = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/api/deals/ubisoft');
-                if (isMounted) {
-                    setDeals(response.data);
-                    setLoading(false);
-                }
-            } catch (err) {
-                if (isMounted) {
-                    setError('Error al cargar las ofertas');
-                    console.error('Error:', err);
-                    setLoading(false);
-                }
-            }
-        };
-
-        // Manejamos la promesa explícitamente
-        fetchDeals().catch(err => {
-            if (isMounted) {
-                console.error('Error en useEffect:', err);
-                setError('Error inesperado al cargar las ofertas');
-                setLoading(false);
-            }
-        });
-
-        // Cleanup function para evitar actualizaciones en componentes desmontados
-        return () => {
-            isMounted = false;
-        };
-    }, []);
 
     if (loading) return <LoadingSpinner />;
     if (error) return <div>{error}</div>;
@@ -97,7 +62,7 @@ const DealsOfDay = () => {
                 <div className="deals-container">
                     <h1>Deals of the Day - UPlay</h1>
                     <div className="deals-grid">
-                        {deals.map((/** @type {{ dealID: string; thumb: string; title: string; normalPrice: string; salePrice: string; savings: string; }} */ deal) => (
+                        {deals && deals.map((/** @type {{ dealID: string; thumb: string; title: string; normalPrice: string; salePrice: string; savings: string; }} */ deal) => (
                             <div key={deal.dealID} className="deal-card">
                                 <img src={deal.thumb} alt={deal.title} className="deal-image"/>
                                 <div className="deal-info">
