@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const multer = require('multer');
 const path = require('path');
+const passport = require('passport');
 
 // Configuración de multer para el almacenamiento de imágenes
 const storage = multer.diskStorage({
@@ -255,6 +256,24 @@ router.post('/update-profile-image', verifyToken, upload.single('profileImage'),
         console.error('Error al actualizar la imagen de perfil:', error);
         res.status(500).json({ error: 'Error al actualizar la imagen de perfil' });
     }
+});
+router.get('/google', passport.authenticate('google', {
+    scope: ['profile', 'email'], // Lo que solicitamos a Google
+    session: false
+}));
+
+// 2. Ruta de callback que Google llamará después de la autenticación
+router.get('/google/callback', passport.authenticate('google', {
+    failureRedirect: 'http://localhost:3000/login?error=auth_failed', // Redirigir al login del frontend si falla
+    session: false
+}), (req, res) => {
+    // Si la autenticación es exitosa, req.user contiene los datos del usuario de la DB
+    // Creamos un token JWT para nuestro cliente
+    const token = jwt.sign({ id: req.user._id, email: req.user.email }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+
+    // Redirigimos al frontend con el token como parámetro de consulta
+    // El frontend deberá capturar este token de la URL y guardarlo
+    res.redirect(`http://localhost:3000/auth/callback?token=${token}`);
 });
 
 module.exports = router;

@@ -38,6 +38,11 @@ const Register = () => {
         }
     };
 
+    const handleGoogleAuth = () => {
+        // Redirige al usuario al endpoint de autenticación de Google en el backend
+        window.location.href = 'http://localhost:5000/api/auth/google';
+    };
+
     return (
         <div className="login-container">
             <div className="login-card">
@@ -84,7 +89,7 @@ const Register = () => {
                     <button
                         type="button"
                         className="google-signin"
-                        onClick={() => console.log('Google sign up clicked')}
+                        onClick={handleGoogleAuth}
                     >
                         <img
                             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"

@@ -3,9 +3,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv'); // Importar dotenv
 const cors = require('cors');
 const path = require('path');
+const passport = require('passport');
 
 // Configurar dotenv ANTES de usar cualquier variable de entorno
 dotenv.config();
+
+// Configurar Passport (asegúrate de que este require se ejecute)
+require('./config/passport-setup');
 
 const app = express();
 
@@ -25,6 +29,9 @@ mongoose.connect(dbConnectionString)
 app.use(cors()); // Habilitar CORS para todas las rutas
 app.use(express.json()); // para parsear application/json
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Configurar la carpeta de uploads como estática
+
+// Inicializar Passport
+app.use(passport.initialize());
 
 // Middleware de Rutas
 app.use('/api/auth', authRoutes);

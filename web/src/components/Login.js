@@ -25,9 +25,9 @@ const Login = () => {
         await login(formData.email, formData.password);
     };
 
-    const handleGoogleSignIn = () => {
-        // Implementar inicio de sesión con Google
-        console.log('Inicio de sesión con Google');
+    const handleGoogleAuth = () => {
+        // Redirige al usuario al endpoint de autenticación de Google en el backend
+        window.location.href = 'http://localhost:5000/api/auth/google';
     };
 
     if (loading) return <LoadingSpinner />;
@@ -76,7 +76,7 @@ const Login = () => {
                     <button
                         type="button"
                         className="google-signin"
-                        onClick={handleGoogleSignIn}
+                        onClick={handleGoogleAuth}
                     >
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
                              alt="Google"
