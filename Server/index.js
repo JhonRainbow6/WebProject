@@ -25,7 +25,13 @@ const steamRoutes = require('./routes/steam');
 
 // Conectar a la DB
 const dbConnectionString = process.env.DB_CONNECTION_STRING.replace('<db_password>', process.env.DB_PASSWORD);
-mongoose.connect(dbConnectionString)
+
+// Opciones de conexión para forzar la reconstruccion de índices
+const mongooseOptions = {
+    autoCreate: true // Asegura que los indices se creen al iniciar la app
+};
+
+mongoose.connect(dbConnectionString, mongooseOptions)
     .then(() => console.log('Conectado a MongoDB...'))
     .catch(error => console.error('Error de conexión a la base de datos:', error));
 

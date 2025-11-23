@@ -120,7 +120,8 @@ router.post('/register', async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ error: 'Error interno del servidor. Intenta más tarde.' });
+        console.error('Error en el registro:', error);
+        res.status(500).json({ error: 'Error interno del servidor al registrar el usuario.', details: error.message });
     }
 });
 
