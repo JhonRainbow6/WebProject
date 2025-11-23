@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
 import './UserProfile.css';
+import BACK_URL from "../config/api";
 
 const UserProfile = () => {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -40,7 +41,7 @@ const UserProfile = () => {
             setError('No se encontró el token de autenticación');
             return;
         }
-        window.location.href = `http://localhost:5000/api/steam/auth/steam?token=${token}`;
+        window.location.href = `${BACK_URL}api/steam/auth/steam?token=${token}`;
     };
 
     const handleImageUpload = async (event) => {
@@ -162,7 +163,7 @@ const UserProfile = () => {
                             <div className="profile-image">
                                 <img
                                     src={user?.profileImage
-                                        ? `http://localhost:5000${user.profileImage}`
+                                        ? `${BACK_URL}${user.profileImage}`
                                         : 'https://via.placeholder.com/150'
                                     }
                                     alt="Foto de perfil"

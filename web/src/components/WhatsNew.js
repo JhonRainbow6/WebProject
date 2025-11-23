@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
 import './WhatsNew.css';
+import BACK_URL from "../config/api";
 
 // Definición de tipo implícita para ayudar con las advertencias
 /**
@@ -33,7 +34,7 @@ const WhatsNew = () => {
         (async () => {
             try {
                 // Llamamos a nuestro propio endpoint que ahora filtra solo noticias de Ubisoft
-                const response = await fetch('http://localhost:5000/api/news/gaming');
+                const response = await fetch(`${BACK_URL}/api/news/gaming` );
 
                 if (!response.ok) {
                     setError('No se pudieron cargar las noticias de Ubisoft');

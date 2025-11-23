@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
 import './Dashboard.css';
+import BACK_URL from "../config/api";
 
 const Dashboard = () => {
     const { user, loading, error } = useAuth();
@@ -77,7 +78,7 @@ const Dashboard = () => {
                             <div className="dashboard-profile-image">
                                 <img
                                     src={user?.profileImage
-                                        ? `http://localhost:5000${user.profileImage}`
+                                        ? `${BACK_URL}${user.profileImage}`
                                         : 'https://via.placeholder.com/150'
                                     }
                                     alt="Foto de perfil"

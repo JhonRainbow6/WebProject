@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import BACK_URL from '../config/api';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const Register = () => {
         setError(null);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+            const response = await axios.post(`${BACK_URL}/api/auth/register`, formData);
             if (response.data.error === null) {
                 // Registro exitoso
                 navigate('/login');
@@ -40,7 +41,7 @@ const Register = () => {
 
     const handleGoogleAuth = () => {
         // Redirige al usuario al endpoint de autenticación de Google en el backend
-        window.location.href = 'http://localhost:5000/api/auth/google';
+        window.location.href =`${BACK_URL}/api/auth/google`;
     };
 
     return (

@@ -2,6 +2,7 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
+import BACK_URL from "../config/api";
 
 export const useAuthActions = () => {
     const { setUser, setLoading, setError } = useAuth();
@@ -11,7 +12,7 @@ export const useAuthActions = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/login', {
+            const res = await axios.post(`${BACK_URL}/api/auth/login`, {
                 email,
                 password
             });
@@ -51,7 +52,7 @@ export const useAuthActions = () => {
 
         setLoading(true);
         try {
-            const res = await axios.get('http://localhost:5000/api/auth/user', {
+            const res = await axios.get(`${BACK_URL}/api/auth/user` , {
                 headers: {
                     'x-auth-token': token,
                     'Content-Type': 'application/json'
@@ -77,7 +78,7 @@ export const useAuthActions = () => {
         }
 
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/change-password', {
+            const res = await axios.post(`${BACK_URL}/api/auth/change-password` , {
                 currentPassword,
                 newPassword
             }, {
@@ -103,7 +104,7 @@ export const useAuthActions = () => {
 
         try {
             const response = await axios.post(
-                'http://localhost:5000/api/auth/update-profile-image',
+                `${BACK_URL}/api/auth/update-profile-image` ,
                 formData,
                 {
                     headers: {

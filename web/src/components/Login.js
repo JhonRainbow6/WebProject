@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
 import './Login.css';
+import BACK_URL from "../config/api";
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ const Login = () => {
 
     const handleGoogleAuth = () => {
         // Redirige al usuario al endpoint de autenticación de Google en el backend
-        window.location.href = 'http://localhost:5000/api/auth/google';
+        window.location.href = `${BACK_URL}/api/auth/google`;
     };
 
     if (loading) return <LoadingSpinner />;
