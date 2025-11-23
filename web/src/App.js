@@ -11,7 +11,6 @@ import PrivateRoute from './components/PrivateRoute';
 import UserProfile from './components/UserProfile';
 import Library from './components/Library';
 import Friends from './components/Friends';
-import AuthCallback from './components/AuthCallback';
 
 function App() {
     return (

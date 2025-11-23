@@ -27,44 +27,47 @@ const WhatsNew = () => {
     const { logout } = useAuthActions();
 
     // Lista de fuentes a excluir
+// Línea 67 - Mover excludedSources fuera del componente:
     const excludedSources = ["Generación Xbox"];
 
-    useEffect(() => {
-        // Función inmediatamente invocada para poder usar async/await dentro de useEffect
-        (async () => {
-            try {
-                // Llamamos a nuestro propio endpoint que ahora filtra solo noticias de Ubisoft
-                const response = await fetch(`${BACK_URL}/api/news/gaming` );
+    const WhatsNew = () => {
+        const [news, setNews] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+        const navigate = useNavigate();
+        const { logout } = useAuthActions();
 
-                if (!response.ok) {
-                    setError('No se pudieron cargar las noticias de Ubisoft');
-                    return;
+        useEffect(() => {
+            (async () => {
+                try {
+                    const response = await fetch(`${BACK_URL}/api/news/gaming`);
+
+                    if (!response.ok) {
+                        setError('No se pudieron cargar las noticias de Ubisoft');
+                        return;
+                    }
+
+                    const data = await response.json();
+
+                    if (data && data.articles && Array.isArray(data.articles) && data.articles.length > 0) {
+                        const filteredArticles = data.articles.filter(article =>
+                            article &&
+                            article.source &&
+                            article.source.name &&
+                            !excludedSources.includes(article.source.name)
+                        );
+                        setNews(filteredArticles);
+                    } else {
+                        setError('No se encontraron artículos de Ubisoft');
+                    }
+                } catch (err) {
+                    setError(err.message || 'Error al cargar las noticias');
+                    console.error('Error al obtener noticias de Ubisoft:', err);
+                } finally {
+                    setLoading(false);
                 }
-
-                const data = await response.json();
-
-                // Verificamos que tengamos artículos para mostrar y que tengan la estructura esperada
-                if (data && data.articles && Array.isArray(data.articles) && data.articles.length > 0) {
-                    // Filtracion de fuentes excluidas y artículos con datos incompletos
-                    const filteredArticles = data.articles.filter(article =>
-                        article &&
-                        article.source &&
-                        article.source.name &&
-                        !excludedSources.includes(article.source.name)
-                    );
-
-                    setNews(filteredArticles);
-                } else {
-                    setError('No se encontraron artículos de Ubisoft');
-                }
-            } catch (err) {
-                setError(err.message || 'Error al cargar las noticias');
-                console.error('Error al obtener noticias de Ubisoft:', err);
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, []);
+            })();
+        }, []);
 
     // Funciones de navegación
     const handleDashboardClick = () => {
@@ -167,3 +170,4 @@ const WhatsNew = () => {
 };
 
 export default WhatsNew;
+}

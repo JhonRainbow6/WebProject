@@ -71,19 +71,6 @@ const UserProfile = () => {
         }
     };
 
-    const togglePlatform = (platform) => {
-        if (platform === 'steam') {
-            if (!user?.steamId) {
-                handleLinkSteam();
-            }
-            return;
-        }
-        setActivePlatforms(prev => ({
-            ...prev,
-            [platform]: !prev[platform]
-        }));
-    };
-
     const handleDealsClick = () => navigate('/deals');
     const handleWhatsNewClick = () => navigate('/whats-new');
     const handleProfileClick = () => navigate('/profile');
