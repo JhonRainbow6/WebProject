@@ -101,9 +101,23 @@ router.post('/register', async (req, res) => {
         });
 
         const savedUser = await user.save();
+
+        // Crear y asignar un token después del registro
+        const token = jwt.sign(
+            { _id: savedUser._id, email: savedUser.email },
+            process.env.TOKEN_SECRET,
+            { expiresIn: '24h' } // Token válido por 24 horas
+        );
+
         res.json({
             error: null,
-            data: { userId: savedUser._id }
+            data: {
+                token,
+                user: {
+                    email: savedUser.email,
+                    id: savedUser._id
+                }
+            }
         });
     } catch (error) {
         res.status(500).json({ error: 'Error interno del servidor. Intenta más tarde.' });
