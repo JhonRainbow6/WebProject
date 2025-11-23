@@ -4,6 +4,7 @@ import './DealsOfDay.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
+import BACK_URL from "../config/api";
 
 const DealsOfDay = () => {
     const [deals, setDeals] = useState([]);
@@ -30,7 +31,7 @@ const DealsOfDay = () => {
 
         const fetchDeals = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/deals/ubisoft');
+                const response = await axios.get(`${BACK_URL}/api/deals/ubisoft`);
                 if (isMounted) {
                     setDeals(response.data);
                     setLoading(false);

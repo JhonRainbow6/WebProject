@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuthActions } from '../hooks/useAuthActions';
 import LoadingSpinner from './LoadingSpinner';
 import './Friends.css';
+import BACK_URL from "../config/api";
 
 const Friends = () => {
     const [friends, setFriends] = useState([]);
@@ -24,7 +25,7 @@ const Friends = () => {
                     return;
                 }
 
-                const response = await axios.get('http://localhost:5000/api/steam/friends', {
+                const response = await axios.get(`${BACK_URL}/api/steam/friends`, {
                     headers: {
                         'x-auth-token': token,
                         'Content-Type': 'application/json'
@@ -107,7 +108,7 @@ const Friends = () => {
                         className="link-steam-button"
                         onClick={() => {
                             const token = localStorage.getItem('token');
-                            window.location.href = `http://localhost:5000/api/steam/auth/steam?token=${token}`;
+                            window.location.href = `${BACK_URL}/api/steam/auth/steam?token=${token}`;
                         }}
                     >
                         Vincular cuentas

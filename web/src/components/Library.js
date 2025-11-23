@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from './LoadingSpinner';
 import axios from 'axios';
 import './Library.css';
+import BACK_URL from "../config/api";
 
 const Library = () => {
     const [games, setGames] = useState([]);
@@ -21,7 +22,7 @@ const Library = () => {
 
             try {
                 const token = localStorage.getItem('token');
-                const response = await axios.get(`http://localhost:5000/api/steam/games`, {
+                const response = await axios.get(`${BACK_URL}/api/steam/games`, {
                     headers: {
                         'Content-Type': 'application/json',
                         'x-auth-token': token
