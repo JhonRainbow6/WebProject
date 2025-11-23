@@ -11,6 +11,7 @@ import PrivateRoute from './components/PrivateRoute';
 import UserProfile from './components/UserProfile';
 import Library from './components/Library';
 import Friends from './components/Friends';
+import AuthCallback from './components/AuthCallback';
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                         <Route path="/" element={<Navigate to="/login" />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
+                        <Route path="/auth/callback" element={<AuthCallback />} />
                         <Route path="/dashboard" element={
                             <PrivateRoute>
                                 <Dashboard />

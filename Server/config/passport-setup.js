@@ -9,33 +9,35 @@ passport.use(new GoogleStrategy({
     },
     async (accessToken, refreshToken, profile, done) => {
         try {
-            // Buscar si el usuario ya existe con este googleId
+            console.log('Google Profile:', profile.id, profile.emails[0].value);
+
             let user = await User.findOne({ googleId: profile.id });
 
             if (user) {
-                // Si el usuario existe, continuar
+                console.log('Usuario existente encontrado:', user._id);
                 return done(null, user);
             } else {
-                // Si no existe, buscar por email por si ya se registró de forma tradicional
                 user = await User.findOne({ email: profile.emails[0].value });
                 if (user) {
-                    // Si existe por email, enlazar la cuenta de Google
+                    console.log('Usuario por email encontrado:', user._id);
                     user.googleId = profile.id;
                     user.profileImage = user.profileImage || profile.photos[0].value;
                     await user.save();
                     return done(null, user);
                 } else {
-                    // Si no existe, crear un nuevo usuario
+                    console.log('Creando nuevo usuario');
                     const newUser = new User({
                         googleId: profile.id,
                         email: profile.emails[0].value,
                         profileImage: profile.photos[0].value,
                     });
                     await newUser.save();
+                    console.log('Nuevo usuario creado:', newUser._id);
                     return done(null, newUser);
                 }
             }
         } catch (error) {
+            console.error('Error en Google Strategy:', error);
             return done(error, false);
         }
     }

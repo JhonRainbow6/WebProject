@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = function(req, res, next) {
-    // Get token from header or query parameter
     let token = req.header('x-auth-token');
     if (!token && req.query.token) {
         token = req.query.token;
@@ -13,11 +12,14 @@ module.exports = function(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-        // Asegurarnos de que req.user tenga la estructura correcta
+        console.log('Token decodificado:', decoded);
+
         req.user = {
-            id: decoded.id || (decoded.user && decoded.user.id) || decoded._id,
-            email: decoded.email || (decoded.user && decoded.user.email)
+            id: decoded.id || decoded._id,
+            _id: decoded._id || decoded.id,
+            email: decoded.email
         };
+
         next();
     } catch (err) {
         console.error('Error de autenticación:', err);

@@ -257,23 +257,30 @@ router.post('/update-profile-image', verifyToken, upload.single('profileImage'),
         res.status(500).json({ error: 'Error al actualizar la imagen de perfil' });
     }
 });
-router.get('/google', passport.authenticate('google', {
-    scope: ['profile', 'email'], // Lo que solicitamos a Google
-    session: false
-}));
-
-// 2. Ruta de callback que Google llamará después de la autenticación
 router.get('/google/callback', passport.authenticate('google', {
-    failureRedirect: `${process.env.FRONTEND_URL}/login?error=auth_failed`, // Redirigir al login del frontend si falla
+    failureRedirect: `${process.env.FRONTEND_URL}/login?error=auth_failed`,
     session: false
 }), (req, res) => {
-    // Si la autenticación es exitosa, req.user contiene los datos del usuario de la DB
-    // Creamos un token JWT para nuestro cliente
-    const token = jwt.sign({ id: req.user._id, email: req.user.email }, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+    try {
 
-    // Redirigimos al frontend con el token como parámetro de consulta
-    // El frontend deberá capturar este token de la URL y guardarlo
-    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+        const token = jwt.sign(
+            {
+                id: req.user._id,
+                _id: req.user._id,
+                email: req.user.email
+            },
+            process.env.TOKEN_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        console.log('Token generado para Google OAuth:', token);
+        console.log('Usuario:', req.user);
+
+        res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
+    } catch (error) {
+        console.error('Error en Google OAuth callback:', error);
+        res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
+    }
 });
 
 module.exports = router;
