@@ -16,7 +16,6 @@ const Dashboard = () => {
     const toggleSidebar = () => {
         setIsSidebarCollapsed(!isSidebarCollapsed);
     };
-
     useEffect(() => {
         const loadUserData = async () => {
             try {
