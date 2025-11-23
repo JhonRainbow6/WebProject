@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "../index.js",
   "scripts": {
-    "start": "node Sever/index.js",
+    "start": "node Server/index.js",
     "dev": "nodemon index.js"
   },
   "private": true,
