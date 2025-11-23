@@ -13,6 +13,10 @@ require('./config/passport-setup');
 
 const app = express();
 
+// Configurar trust proxy para manejar correctamente proxies inversos
+// Esto debe estar antes de cualquier middleware o ruta que dependa de URL correctas
+app.set('trust proxy', true);
+
 // Importar Rutas
 const authRoutes = require('./routes/auth');
 const dealsRoutes = require('./routes/deals');
