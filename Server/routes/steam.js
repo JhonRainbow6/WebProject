@@ -11,12 +11,12 @@ router.get('/auth/steam', (req, res) => {
         return res.status(401).json({ msg: 'Token no proporcionado' });
     }
 
-    const redirectUrl = `http://localhost:5000/api/steam/auth/steam/callback?token=${token}`;
+    const redirectUrl = `${process.env.BACKEND_URL}/api/steam/auth/steam/callback?token=${token}`;
     const steamAuthUrl = `https://steamcommunity.com/openid/login?` +
         `openid.ns=http://specs.openid.net/auth/2.0&` +
         `openid.mode=checkid_setup&` +
         `openid.return_to=${encodeURIComponent(redirectUrl)}&` +
-        `openid.realm=http://localhost:5000&` +
+        `openid.realm=${process.env.BACKEND_URL}` +
         `openid.identity=http://specs.openid.net/auth/2.0/identifier_select&` +
         `openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
 
@@ -28,13 +28,13 @@ router.get('/auth/steam/callback', authMiddleware, async (req, res) => {
     try {
         // Verificar que la respuesta de Steam sea válida
         if (!req.query['openid.claimed_id']) {
-            return res.redirect('http://localhost:3000/profile?error=steam_auth_failed');
+            return res.redirect(`${process.env.FRONTEND_URL}/profile?error=steam_auth_failed`);
         }
 
         // Verificar que tengamos el ID del usuario
         if (!req.user || !req.user.id) {
             console.error('ID de usuario no encontrado en el token:', req.user);
-            return res.redirect('http://localhost:3000/profile?error=auth_error');
+            return res.redirect(`${process.env.FRONTEND_URL}/profile?error=auth_error`);
         }
 
         const steamId = req.query['openid.claimed_id'].split('/').pop();
@@ -46,28 +46,28 @@ router.get('/auth/steam/callback', authMiddleware, async (req, res) => {
 
             if (!steamResponse.data.response.players.length) {
                 console.error('Steam ID no válido:', steamId);
-                return res.redirect('http://localhost:3000/profile?error=invalid_steam_id');
+                return res.redirect(`${process.env.FRONTEND_URL}/profile?error=invalid_steam_id`);
             }
         } catch (steamError) {
             console.error('Error validando Steam ID:', steamError);
-            return res.redirect('http://localhost:3000/profile?error=steam_api_error');
+            return res.redirect(`${process.env.FRONTEND_URL}/profile?error=steam_api_error`);
         }
 
         // Buscar y actualizar el usuario
         const user = await User.findById(req.user.id);
         if (!user) {
             console.error('Usuario no encontrado con ID:', req.user.id);
-            return res.redirect('http://localhost:3000/profile?error=user_not_found');
+            return res.redirect(`${process.env.FRONTEND_URL}/profile?error=user_not_found`);
         }
 
         user.steamId = steamId;
         await user.save();
 
         // Redirigir de vuelta al perfil con éxito
-        res.redirect('http://localhost:3000/profile?success=steam_linked');
+        res.redirect(`${process.env.FRONTEND_URL}/profile?success=steam_linked`);
     } catch (error) {
         console.error('Error linking Steam account:', error);
-        res.redirect('http://localhost:3000/profile?error=unknown_error');
+        res.redirect(`${process.env.FRONTEND_URL}/profile?error=unknown_error`);
     }
 });
 

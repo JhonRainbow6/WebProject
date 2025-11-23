@@ -264,7 +264,7 @@ router.get('/google', passport.authenticate('google', {
 
 // 2. Ruta de callback que Google llamará después de la autenticación
 router.get('/google/callback', passport.authenticate('google', {
-    failureRedirect: 'http://localhost:3000/login?error=auth_failed', // Redirigir al login del frontend si falla
+    failureRedirect: `${process.env.FRONTEND_URL}/login?error=auth_failed`, // Redirigir al login del frontend si falla
     session: false
 }), (req, res) => {
     // Si la autenticación es exitosa, req.user contiene los datos del usuario de la DB
@@ -273,7 +273,7 @@ router.get('/google/callback', passport.authenticate('google', {
 
     // Redirigimos al frontend con el token como parámetro de consulta
     // El frontend deberá capturar este token de la URL y guardarlo
-    res.redirect(`http://localhost:3000/auth/callback?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
 });
 
 module.exports = router;
