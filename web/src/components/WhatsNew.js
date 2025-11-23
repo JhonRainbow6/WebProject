@@ -5,7 +5,9 @@ import LoadingSpinner from './LoadingSpinner';
 import './WhatsNew.css';
 import BACK_URL from "../config/api";
 
-// Definición de tipo implícita para ayudar con las advertencias
+// Lista de fuentes a excluir - movido fuera del componente
+const excludedSources = ["Generación Xbox"];
+
 /**
  * @typedef {Object} Article
  * @property {string} title - Título del artículo
@@ -26,18 +28,7 @@ const WhatsNew = () => {
     const navigate = useNavigate();
     const { logout } = useAuthActions();
 
-    // Lista de fuentes a excluir
-// Línea 67 - Mover excludedSources fuera del componente:
-    const excludedSources = ["Generación Xbox"];
-
-    const WhatsNew = () => {
-        const [news, setNews] = useState([]);
-        const [loading, setLoading] = useState(true);
-        const [error, setError] = useState(null);
-        const navigate = useNavigate();
-        const { logout } = useAuthActions();
-
-        useEffect(() => {
+    useEffect(() => {
             (async () => {
                 try {
                     const response = await fetch(`${BACK_URL}/api/news/gaming`);
@@ -135,9 +126,9 @@ const WhatsNew = () => {
                                     </div>
                                 )}
                                 <div className="news-content">
-                                    <h3>{article && article.title || 'Noticia de Ubisoft'}</h3>
+                                    <h3>{(article && article.title) || 'Noticia de Ubisoft'}</h3>
                                     <div className="news-meta">
-                                        <span>Fuente: {article && article.source && article.source.name || 'Desconocida'}</span>
+                                        <span>Fuente: {(article && article.source && article.source.name) || 'Desconocida'}</span>
                                         <span>Fecha: {article && article.publishedAt ?
                                             new Date(article.publishedAt).toLocaleDateString('es-ES') :
                                             'Fecha desconocida'}</span>
@@ -151,7 +142,7 @@ const WhatsNew = () => {
                                     </p>
                                     <div className="news-tags">
                                         <span className="tag">Ubisoft</span>
-                                        {article && article.author && <span className="tag">Por: {article.author}</span>}
+                                        {(article && article.author) && <span className="tag">Por: {article.author}</span>}
                                     </div>
                                 </div>
                             </div>
@@ -170,4 +161,3 @@ const WhatsNew = () => {
 };
 
 export default WhatsNew;
-}
