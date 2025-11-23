@@ -257,6 +257,12 @@ router.post('/update-profile-image', verifyToken, upload.single('profileImage'),
         res.status(500).json({ error: 'Error al actualizar la imagen de perfil' });
     }
 });
+
+router.get('/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+    session: false
+}));
+
 router.get('/google/callback', passport.authenticate('google', {
     failureRedirect: `${process.env.FRONTEND_URL}/login?error=auth_failed`,
     session: false
