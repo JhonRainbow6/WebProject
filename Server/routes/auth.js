@@ -260,7 +260,6 @@ router.post('/update-profile-image', verifyToken, upload.single('profileImage'),
 
 router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
-    session: false
 }));
 
 router.get('/google/callback', passport.authenticate('google', {
