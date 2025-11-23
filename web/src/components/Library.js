@@ -10,8 +10,13 @@ const Library = () => {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const { user } = useAuth();
     const navigate = useNavigate();
+
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
+    };
 
     useEffect(() => {
         const fetchGames = async () => {
@@ -58,7 +63,10 @@ const Library = () => {
     if (loading) {
         return (
             <div className="library-container">
-                <aside className="sidebar">
+                <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                    <button className="toggle-sidebar" onClick={toggleSidebar}>
+                        <i className="fas fa-chevron-left"></i>
+                    </button>
                     <div className="sidebar-icons">
                         <div className="icon-group">
                             <button className="sidebar-icon" onClick={handleDashboardClick}>
@@ -99,7 +107,10 @@ const Library = () => {
     if (!user?.steamId) {
         return (
             <div className="library-container">
-                <aside className="sidebar">
+                <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                    <button className="toggle-sidebar" onClick={toggleSidebar}>
+                        <i className="fas fa-chevron-left"></i>
+                    </button>
                     <div className="sidebar-icons">
                         <div className="icon-group">
                             <button className="sidebar-icon" onClick={handleDashboardClick}>
@@ -146,7 +157,10 @@ const Library = () => {
 
     return (
         <div className="library-container">
-            <aside className="sidebar">
+            <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                <button className="toggle-sidebar" onClick={toggleSidebar}>
+                    <i className="fas fa-chevron-left"></i>
+                </button>
                 <div className="sidebar-icons">
                     <div className="icon-group">
                         <button className="sidebar-icon" onClick={handleDashboardClick}>

@@ -20,10 +20,15 @@ const UserProfile = () => {
         playstation: false
     });
     const [isLoading, setIsLoading] = useState(false);
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
     const navigate = useNavigate();
     const { user } = useAuth();
     const { logout, changePassword, updateProfileImage } = useAuthActions();
+
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
+    };
 
     // Efecto para mantener actualizado el estado de las plataformas
     useEffect(() => {
@@ -112,7 +117,10 @@ const UserProfile = () => {
 
     return (
         <div className="dashboard-container">
-            <aside className="sidebar">
+            <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+                <button className="toggle-sidebar" onClick={toggleSidebar}>
+                    <i className="fas fa-chevron-left"></i>
+                </button>
                 <div className="sidebar-icons">
                     <div className="icon-group">
                         <button className="sidebar-icon" onClick={handleDashboardClick}>
