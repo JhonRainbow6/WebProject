@@ -46,7 +46,7 @@ const UserProfile = () => {
             setError('No se encontró el token de autenticación');
             return;
         }
-        window.location.href = `${BACK_URL}api/steam/auth/steam?token=${token}`;
+        window.location.href = `${BACK_URL}/api/steam/auth/steam?token=${token}`;
     };
 
     const handleImageUpload = async (event) => {
