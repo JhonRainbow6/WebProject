@@ -20,11 +20,20 @@ router.get('/ubisoft', async (req, res) => {
         console.log('Deals fetched successfully, count:', response.data.length);
         res.json(response.data);
     } catch (error) {
-        console.error('Error al obtener las ofertas:', error.message);
-        console.error('Error details:', error.response?.status, error.response?.statusText);
+        console.error('Error fetching deals from CheapShark:', error.message);
 
-        res.status(500).json({
-            error: 'Error al obtener las ofertas',
+        if (error.response) {
+            console.error('Error Data:', error.response.data);
+            console.error('Error Status:', error.response.status);
+            console.error('Error Headers:', error.response.headers);
+        } else if (error.request) {
+            console.error('Error Request: No response received', error.request);
+        } else {
+            console.error('Error Config:', error.message);
+        }
+
+        res.status(502).json({
+            error: 'Error al comunicarse con el proveedor de ofertas',
             details: error.message,
             timestamp: new Date().toISOString()
         });
