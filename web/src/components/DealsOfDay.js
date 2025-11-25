@@ -43,23 +43,20 @@ const DealsOfDay = () => {
                 }
             } catch (err) {
                 if (isMounted) {
-                    setError('Error al cargar las ofertas');
-                    console.error('Error:', err);
+                    // Extraer el mensaje de error de la respuesta del backend si está disponible
+                    const errorMessage = err.response?.data?.error || 'Error al cargar las ofertas. Inténtalo de nuevo más tarde.';
+                    setError(errorMessage);
+                    console.error('Error fetching deals:', err.response || err);
+                }
+            } finally {
+                if (isMounted) {
                     setLoading(false);
                 }
             }
         };
 
-        // Manejamos la promesa explícitamente
-        fetchDeals().catch(err => {
-            if (isMounted) {
-                console.error('Error en useEffect:', err);
-                setError('Error inesperado al cargar las ofertas');
-                setLoading(false);
-            }
-        });
+        fetchDeals();
 
-        // Cleanup function para evitar actualizaciones en componentes desmontados
         return () => {
             isMounted = false;
         };
