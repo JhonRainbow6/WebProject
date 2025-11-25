@@ -16,7 +16,7 @@ router.get('/auth/steam', (req, res) => {
         `openid.ns=http://specs.openid.net/auth/2.0&` +
         `openid.mode=checkid_setup&` +
         `openid.return_to=${encodeURIComponent(redirectUrl)}&` +
-        `openid.realm=${process.env.BACKEND_URL}` +
+        `openid.realm=${process.env.BACKEND_URL}&` +
         `openid.identity=http://specs.openid.net/auth/2.0/identifier_select&` +
         `openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
 
